@@ -1,5 +1,5 @@
 # MatchingWordsAndPictures<br>
-##生徒の自立活動用に作ったサンプルアプリ<br>
+## 生徒の自立活動用に作ったサンプルアプリ<br>
 言語聴覚士の方からのアドバイスを元に制作<br>
 <<どんなアプリか？>><br>
 １.左側に人の画像が出てくる
@@ -7,4 +7,5 @@
 3.画像と名前が一致したボタンを押すと正解の音楽が流れる（自分で探す）。5回正解すると、生徒の好きな音楽が数秒流れる。画像が更新される。
 4.間違っていた場合は、不正解の音楽が流れ、画像は更新されない。
 
-<img width="498" alt="スクリーンショット 2023-08-30 20 24 28" src="https://github.com/sasasan03/MatchingWordsAndPictures/assets/111943557/f885e9ac-2be8-4d2e-9acd-15128112e223">
+
+<img width="272" alt="スクリーンショット 2023-08-30 20 50 26" src="https://github.com/sasasan03/MatchingWordsAndPictures/assets/111943557/c1371795-2e37-480e-8b9f-c227515a6766">
