@@ -10,7 +10,7 @@ import AVFoundation
 
 struct NameRowView: View {
         
-        @Binding var persons : [Person]
+        @Binding var persons : [PersonDomeinObject]
         @Binding var personImage: String
         @Binding var isTextChanged: Bool
         
@@ -64,7 +64,7 @@ struct NameRowView: View {
                                 .foregroundColor(.black)
                                 .font(.system(size: 50))
                                 .bold()
-                                .onLongPressGesture(minimumDuration: 3, pressing: { pressing in
+                                .onLongPressGesture(minimumDuration: 2, pressing: { pressing in
                                     persons[index].isTextChanged = pressing
                                 }, perform: {
                                     //MARK: 正解したとき
@@ -114,7 +114,7 @@ struct NameRowView_Previews: PreviewProvider {
         NameRowView(
             persons: .constant(
                 [
-                    Person(
+                    PersonDomeinObject(
                         displayName: "さこ",
                         imageName: "sakoda",
                         isTextChanged: false)

@@ -13,11 +13,11 @@ import AVFoundation
 struct ContentView: View {
     
     @State var persons = [
-        Person(displayName: "よしい", imageName: "yoshii", isTextChanged: false),
-        Person(displayName: "ふくもと", imageName: "hukumoto", isTextChanged: false),
-        Person(displayName: "みほこ", imageName: "mihoko", isTextChanged: false),
-        Person(displayName: "あつこ", imageName: "atsuko", isTextChanged: false),
-        Person(displayName: "さこだ", imageName: "sakoda", isTextChanged: false),
+        PersonDomeinObject(displayName: "よしい", imageName: "yoshii", isTextChanged: false),
+        PersonDomeinObject(displayName: "ふくもと", imageName: "hukumoto", isTextChanged: false),
+        PersonDomeinObject(displayName: "みほこ", imageName: "mihoko", isTextChanged: false),
+        PersonDomeinObject(displayName: "あつこ", imageName: "atsuko", isTextChanged: false),
+        PersonDomeinObject(displayName: "さこだ", imageName: "sakoda", isTextChanged: false),
     ]
     @State private var personImage = "atsuko"
     @State private var selectedNum = 0

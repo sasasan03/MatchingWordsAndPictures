@@ -8,7 +8,7 @@
 import Foundation
 import UIKit
 
-struct Person: Hashable {
+struct PersonDomeinObject: Hashable {
     let displayName: String
     let imageName: String
     var isTextChanged: Bool
