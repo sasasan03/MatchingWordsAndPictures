@@ -46,14 +46,12 @@ struct NameRowView: View {
         var body: some View{
             HStack {
                 
-                Spacer()
-                
                 //MARK: - 右のボタン画面（　ForEachから）
                 VStack{
-                    ForEach(persons, id: \.self ){ text in
+                    ForEach(persons.indices, id: \.self ){ index in
                         Spacer()
                         ZStack {
-                            Color(text.isTextChanged ? .gray : .white)
+                            Color(persons[index].isTextChanged ? .gray : .white)
     //                        Color(isTextChanged ? .gray : .white)
                                 .frame(width: 300, height: 100)
                                 .cornerRadius(15)
@@ -62,15 +60,15 @@ struct NameRowView: View {
                                         .stroke(Color.black, lineWidth: 5)
                                 )
                             
-                            Text(text.displayName)
+                        Text(persons[index].displayName)
                                 .foregroundColor(.black)
                                 .font(.system(size: 50))
                                 .bold()
                                 .onLongPressGesture(minimumDuration: 3, pressing: { pressing in
-                                    text.isTextChanged = pressing
+                                    persons[index].isTextChanged = pressing
                                 }, perform: {
                                     //MARK: 正解したとき
-                                    if personImage == text.imageName {
+                                    if personImage == persons[index].imageName {
                                         count += 1
                                         if count % 5 == 0 {
                                             do {

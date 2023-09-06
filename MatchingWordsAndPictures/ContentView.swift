@@ -42,7 +42,6 @@ struct ContentView: View {
                     .resizable()
                     .scaledToFit()
                     .frame(width: 350, height: 300)
-                    .padding(50)
 
                 Spacer()
                 
@@ -52,7 +51,7 @@ struct ContentView: View {
                     personImage: $personImage,
                     isTextChanged: $isTextChanged
                 )
-                
+                Spacer()
             }
         }
     }
