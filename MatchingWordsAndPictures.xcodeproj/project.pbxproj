@@ -54,6 +54,7 @@
 		69D545F12AA88EE700D2A6E9 /* NameRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NameRowView.swift; sourceTree = "<group>"; };
 		69D545F32AA8974100D2A6E9 /* ImageTextRegisterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageTextRegisterView.swift; sourceTree = "<group>"; };
 		69D545F92AA899CC00D2A6E9 /* ImageTextRegisterRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageTextRegisterRowView.swift; sourceTree = "<group>"; };
+		69D545FF2AA89D2000D2A6E9 /* MyPlayground.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = MyPlayground.playground; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -106,9 +107,8 @@
 			children = (
 				69BD0C402A610A0600DD7041 /* MatchingWordsAndPicturesApp.swift */,
 				69D545F52AA898F700D2A6E9 /* ActionView */,
-				69D545EF2AA88D8800D2A6E9 /* Model.swift */,
 				69D545F62AA8991B00D2A6E9 /* RegisterView */,
-				69BD0C6B2A615B0B00DD7041 /* AVFoundationData.swift */,
+				69D545FB2AA89B4200D2A6E9 /* Model */,
 				69BD0C442A610A0700DD7041 /* Assets.xcassets */,
 				69BD0C462A610A0700DD7041 /* Preview Content */,
 			);
@@ -156,6 +156,16 @@
 				69D545F92AA899CC00D2A6E9 /* ImageTextRegisterRowView.swift */,
 			);
 			path = RegisterView;
+			sourceTree = "<group>";
+		};
+		69D545FB2AA89B4200D2A6E9 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				69BD0C6B2A615B0B00DD7041 /* AVFoundationData.swift */,
+				69D545EF2AA88D8800D2A6E9 /* Model.swift */,
+				69D545FF2AA89D2000D2A6E9 /* MyPlayground.playground */,
+			);
+			path = Model;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */

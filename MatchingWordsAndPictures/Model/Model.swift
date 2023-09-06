@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import UIKit
 
 struct Person: Hashable {
     let displayName: String
@@ -35,3 +36,8 @@ class Person2: Hashable {
     }
 }
 
+//
+struct ImageText {
+    var text: String = ""
+    var image: UIImage?
+}

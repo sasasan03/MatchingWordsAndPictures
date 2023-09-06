@@ -7,15 +7,6 @@
 
 import SwiftUI
 
-
-struct ImageText {
-    var text: String = ""
-    var image: UIImage?
-}
-
-
-
-
 struct ImageTextRegisterView: View {
     
     @State private var rows: [ImageText] = Array(repeating: ImageText(), count: 4)
@@ -31,9 +22,11 @@ struct ImageTextRegisterView: View {
                 Color.green.ignoresSafeArea(.all)
                 
                 VStack{
+                    Spacer()
                     ForEach(0..<rows.count, id: \.self){ index in
                         ImageTextRegisterRowView(text: $rows[index].text, uiImage: $rows[index].image)
                     }
+                    Spacer()
                 }
             }
         }
