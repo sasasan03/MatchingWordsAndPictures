@@ -13,6 +13,7 @@ struct MatchingWordsAndPicturesApp: App {
         WindowGroup {
             ContentView(soundType: SoundType.bibin)
 //            AVFoundationTest()
+//            PressButtonImageView()
         }
     }
 }
