@@ -50,58 +50,60 @@ struct NameRowView: View {
                 VStack{
                     ForEach(persons.indices, id: \.self ){ index in
                         Spacer()
-                        ZStack {
-                            Color(persons[index].isTextChanged ? .gray : .white)
-    //                        Color(isTextChanged ? .gray : .white)
-                                .frame(width: 300, height: 100)
-                                .cornerRadius(15)
-                                .overlay(
-                                    RoundedRectangle(cornerRadius: 15)
-                                        .stroke(Color.black, lineWidth: 5)
-                                )
-                            
-                        Text(persons[index].displayName)
-                                .foregroundColor(.black)
-                                .font(.system(size: 50))
-                                .bold()
-                                .onLongPressGesture(minimumDuration: 2, pressing: { pressing in
-                                    persons[index].isTextChanged = pressing
-                                }, perform: {
-                                    //MARK: 正解したとき
-                                    if personImage == persons[index].imageName {
-                                        count += 1
-                                        if count % 5 == 0 {
-                                            do {
-                                                musicPlayer = try AVAudioPlayer(data: bibinData)
-                                                musicPlayer.play()
-                                                changeImage()
-                                            } catch {
-                                                print("再生ミス")
-                                            }
-                                        } else {
-                                            do {
-                                                musicPlayer = try AVAudioPlayer(data: correctData)
-                                                musicPlayer.play()
-                                                changeImage()
-                                            } catch {
-                                                print("再生ミス")
-                                            }
-                                        }
-                                        //MARK: 不正解だったとき
-                                    } else {
-                                        do {
-                                            musicPlayer = try AVAudioPlayer(data: incorrectData)
-                                            musicPlayer.play()
-                                        } catch {
-                                            print("再生ミス")
-                                        }
+                            ZStack {
+                                Color(persons[index].isTextChanged ? .gray : .white)
+                                    .frame(width: 300, height: 100)
+                                    .cornerRadius(15)
+                                    .overlay(
+                                        RoundedRectangle(cornerRadius: 15)
+                                            .stroke(Color.black, lineWidth: 5)
+                                    )
+                                
+                            Text(persons[index].displayName)
+                                    .foregroundColor(.black)
+                                    .font(.system(size: 50))
+                                    .bold()
+                                    
+                                //MARK: - 終了
+                                Spacer()
+                            }
+                        .onLongPressGesture(minimumDuration: 1, pressing: { pressing in
+                            persons[index].isTextChanged = pressing
+                        }, perform: {
+                            //MARK: 正解したとき
+                            if personImage == persons[index].imageName {
+                                count += 1
+                                if count % 5 == 0 {
+                                    do {
+                                        musicPlayer = try AVAudioPlayer(data: bibinData)
+                                        musicPlayer.play()
+                                        changeImage()
+                                    } catch {
+                                        print("再生ミス")
+                                    }
+                                } else {
+                                    do {
+                                        musicPlayer = try AVAudioPlayer(data: correctData)
+                                        musicPlayer.play()
+                                        changeImage()
+                                    } catch {
+                                        print("再生ミス")
                                     }
                                 }
-                                )
-                            //MARK: - 終了
-                            Spacer()
+                                //MARK: 不正解だったとき
+                            } else {
+                                do {
+                                    musicPlayer = try AVAudioPlayer(data: incorrectData)
+                                    musicPlayer.play()
+                                } catch {
+                                    print("再生ミス")
+                                }
+                            }
                         }
+                        )
+                       
                     }
+                    
                     Spacer()
                 }
                 .padding()

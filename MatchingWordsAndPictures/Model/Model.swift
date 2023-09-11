@@ -8,6 +8,7 @@
 import Foundation
 import UIKit
 
+//Domein Logic
 struct PersonDomeinObject: Hashable {
     let displayName: String
     let imageName: String
