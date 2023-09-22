@@ -12,8 +12,7 @@ struct MatchingWordsAndPicturesApp: App {
     var body: some Scene {
         WindowGroup {
             ContentView(soundType: SoundType.bibin)
-//            AVFoundationTest()
-//            PressButtonImageView()
+            //ImageTextRegisterView()
         }
     }
 }

@@ -119,10 +119,10 @@ struct NameRowView_Previews: PreviewProvider {
                     PersonDomeinObject(
                         displayName: "さこ",
                         imageName: "sakoda",
-                        isTextChanged: false)
+                        isTextChanged: true)
                 ]
             ),
             personImage: .constant("sako"),
-            isTextChanged: .constant(false))
+            isTextChanged: .constant(true))
     }
 }

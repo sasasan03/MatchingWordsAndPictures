@@ -16,17 +16,23 @@ struct ImageTextRegisterView: View {
     @State var text = ""
     
     var body: some View {
-        
-        GeometryReader { geometry in
-            ZStack{
-                Color.green.ignoresSafeArea(.all)
-                
-                VStack{
-                    Spacer()
-                    ForEach(0..<rows.count, id: \.self){ index in
-                        ImageTextRegisterRowView(text: $rows[index].text, uiImage: $rows[index].image)
+        NavigationStack{
+            GeometryReader { geometry in
+                ZStack{
+                    Color.cyan.ignoresSafeArea(.all)
+                    VStack{
+                        VStack{
+                            Spacer()
+                            ForEach(0..<rows.count, id: \.self){ index in
+                                ImageTextRegisterRowView(text: $rows[index].text, uiImage: $rows[index].image)
+                            }
+                            Spacer()
+                        }
+                        NavigationLink("問題に挑戦する") {
+                            MatingView()
+                        }
+                        .foregroundColor(.white)
                     }
-                    Spacer()
                 }
             }
         }
