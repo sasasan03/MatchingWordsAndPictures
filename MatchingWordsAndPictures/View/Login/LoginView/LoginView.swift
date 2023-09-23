@@ -106,7 +106,7 @@ struct LoginView: View {
                         //TODO: 認証する
                         Auth.auth().signIn(withEmail: email, password: password){ authResult, error in
                             if let error = error {
-                                print(error)
+                                print("🍟",error)
                                 return
                             }
                             if let authResult = authResult {
@@ -117,7 +117,6 @@ struct LoginView: View {
                                     
                                 }
                             }
-                            
                         }
                         //TODO: サクセスビューへの遷移
                     }

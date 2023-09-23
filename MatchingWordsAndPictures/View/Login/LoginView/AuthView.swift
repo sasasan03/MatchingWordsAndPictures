@@ -7,8 +7,6 @@
 
 import SwiftUI
 
-
-
 struct AuthView: View {
     
     @State var currentShowingView: AuthState = .login
@@ -22,7 +20,8 @@ struct AuthView: View {
                 SignUpView(currentShowingView: $currentShowingView)
                     .transition(.move(edge: .bottom))
             } else {
-                LoginSuccessView()
+//                LoginSuccessView()
+                ImageTextRegisterView()
                     .transition(.move(edge: .leading))
             }
         }

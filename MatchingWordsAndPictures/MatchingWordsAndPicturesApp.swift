@@ -19,13 +19,20 @@ class AppDelegate: NSObject, UIApplicationDelegate {
 
 @main
 struct MatchingWordsAndPicturesApp: App {
-    
-    @UIApplicationDelegateAdaptor(AppDelegate.self) var delegate
+    //TODO: こいつがコメントアウトされていないとクラッシュが起こる
+//    @UIApplicationDelegateAdaptor(AppDelegate.self) var delegate
     
     var body: some Scene {
         WindowGroup {
-            ContentView(soundType: SoundType.bibin)
-            //ImageTextRegisterView()
+//            UpdatePictureView()
+//            ContentView(soundType: SoundType.bibin)
+//            ImageTextRegisterView()
+            AuthView()
+//            SignUpView(currentShowingView: .constant(.signUp))
         }
+    }
+    
+    init(){
+        FirebaseApp.configure()
     }
 }

@@ -7,6 +7,10 @@
 
 import SwiftUI
 import FirebaseAuth
+import Firebase
+import FirebaseStorage
+
+
 
 enum LoginError: LocalizedError {
     case inVaildMail
@@ -38,6 +42,7 @@ struct SignUpView: View {
     @AppStorage("uid") var userID = ""
     @State private var mail = ""
     @State private var password = ""
+    @State private var loginStatusMessage = ""
     
     //MARK: - エラー処理で使用
     @State var loginError: LoginError? = nil
@@ -90,6 +95,8 @@ struct SignUpView: View {
                 .background(RoundedRectangle(cornerRadius: 10).fill(Color.white))
                 
                 Spacer()
+                Text(loginStatusMessage)
+                    .foregroundColor(.black)
                 Spacer()
                 
                 //MARK: - 登録ボタン
@@ -97,9 +104,10 @@ struct SignUpView: View {
                     //TODO: アドレスとパスワードの登録。認証
                     
                     Auth.auth().createUser(withEmail: mail, password: password){ authResult , error in
-                        if mail.count == 0 || password.count == 0{
-                            //エラーを出させたい。
+                        guard mail.count == 0 || password.count == 0 else {
+                            return
                         }
+
                         if let error = error as? LoginError {
                            print("🍔")
                         loginError = error//🟥()をつけると解消。評価の優先順位をつけてくれるのか？
@@ -108,7 +116,6 @@ struct SignUpView: View {
                         }
                         print("🍟")
                         if let authResult = authResult {
-                            
                             userID = authResult.user.uid
                         }
                     }
@@ -134,7 +141,7 @@ struct SignUpView: View {
             .padding()
         }
     }
-        
+    
 }
 
 struct SignUpView_Previews: PreviewProvider {
