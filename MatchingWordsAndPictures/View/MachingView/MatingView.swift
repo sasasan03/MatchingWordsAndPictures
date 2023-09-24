@@ -6,10 +6,16 @@
 //
 
 import SwiftUI
+//import FirebaseAuth
+//import Firebase
 
 struct MatingView: View {
     var body: some View {
-        Text("Hello, World!")
+        VStack{
+            Text("Hello, World!")
+            Text("\(FirebaseManager.shared.description)")
+             Text("aa")
+        }
     }
 }
 

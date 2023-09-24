@@ -39,7 +39,7 @@ struct ImageTextRegisterView: View {
                     .toolbar {
                         ToolbarItem(placement: .navigationBarTrailing){
                             Button {
-                                peristImageStorage(uiImage: uiImage)
+//                                peristImageStorage(uiImage: uiImage)
                             } label: {
                                 Text("保存")
                                     .foregroundColor(.white)
@@ -51,33 +51,33 @@ struct ImageTextRegisterView: View {
         }
     }
     
-    private func peristImageStorage(uiImage: UIImage?){
-        print("🍊",uiImage ?? "uiImageは空だよ")
-        guard let uiImage = uiImage else { return }
-        print("🟥", FirebaseManager.shared.auth.currentUser?.uid ?? "uidないよ〜〜")
-        guard let uid = FirebaseManager.shared.auth.currentUser?.uid else { return }
-        let ref = FirebaseManager.shared.storage.reference(withPath: uid)
-        print("🟦")
-        guard let imageData = self.uiImage?.jpegData(compressionQuality: 0.5) else { return }
-        print("🟢")
-        ref.putData(imageData, metadata: nil) { metaData, err in
-            print("🟨")
-            if let err = err {
-                loginStateMessage = "Failed to push image to Storage: \(err)"
-                return
-            }
-            print("🟣")
-            ref.downloadURL { url, err in
-                if let err {
-                    loginStateMessage = "Failed to retrieve downloadURL: \(err)"
-                    return
-                }
-                
-                loginStateMessage = "Successfully stored image with url: \(url?.absoluteString ?? "もものすけ")"
-            }
-        }
-    }
-    
+//    private func peristImageStorage(uiImage: UIImage?){
+//        print("🍊",uiImage ?? "uiImageは空だよ")
+//        guard let uiImage = uiImage else { return }
+//        print("🟥", FirebaseManager.shared.auth.currentUser?.uid ?? "uidないよ〜〜")
+//        guard let uid = FirebaseManager.shared.auth.currentUser?.uid else { return }
+//        let ref = FirebaseManager.shared.storage.reference(withPath: uid)
+//        print("🟦")
+//        guard let imageData = self.uiImage?.jpegData(compressionQuality: 0.5) else { return }
+//        print("🟢")
+//        ref.putData(imageData, metadata: nil) { metaData, err in
+//            print("🟨")
+//            if let err = err {
+//                loginStateMessage = "Failed to push image to Storage: \(err)"
+//                return
+//            }
+//            print("🟣")
+//            ref.downloadURL { url, err in
+//                if let err {
+//                    loginStateMessage = "Failed to retrieve downloadURL: \(err)"
+//                    return
+//                }
+//
+//                loginStateMessage = "Successfully stored image with url: \(url?.absoluteString ?? "もものすけ")"
+//            }
+//        }
+//    }
+
 }
 
 
