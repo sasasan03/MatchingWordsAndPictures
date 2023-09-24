@@ -18,13 +18,13 @@ struct ImageTextRegisterRowView: View {
     @State var showingPicker = false
     @State var loginStateMessage = ""
     
+    
     var body: some View {
         GeometryReader { geometry in
             HStack{
                 Spacer()
                 VStack{
                     if let image = uiImage {
-                        let _ = print("🧡", image)
                         Image(uiImage: image)
                             .resizable()
                             .aspectRatio(contentMode: .fit)
@@ -58,18 +58,17 @@ struct ImageTextRegisterRowView: View {
     }
     
     private func peristImageStorage(uiImage: UIImage?){
-        print("🍊",uiImage ?? "uiImageは空だよ")
-        guard let uiImage = uiImage else { return }
         print("🟥", FirebaseManager.shared.auth.currentUser?.uid ?? "uidないよ〜〜")
         guard let uid = FirebaseManager.shared.auth.currentUser?.uid else { return }
         let ref = FirebaseManager.shared.storage.reference(withPath: uid)
         print("🟦")
         guard let imageData = self.uiImage?.jpegData(compressionQuality: 0.5) else { return }
-        print("🟢")
+        print("🟢",imageData)
         ref.putData(imageData, metadata: nil) { metaData, err in
             print("🟨")
             if let err = err {
                 loginStateMessage = "Failed to push image to Storage: \(err)"
+                print("🍟",err)
                 return
             }
             print("🟣")

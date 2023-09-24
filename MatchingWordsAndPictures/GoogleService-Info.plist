@@ -3,17 +3,17 @@
 <plist version="1.0">
 <dict>
 	<key>API_KEY</key>
-	<string>AIzaSyAWSDGCevx4XiDAdS_4g8aN3t7BC7Q6mRI</string>
+	<string>AIzaSyCjeap0mC3vJjSp8ivWG1l5QTv5V3hMZlk</string>
 	<key>GCM_SENDER_ID</key>
-	<string>553411029106</string>
+	<string>182753575099</string>
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
 	<string>com.sako.MatchingWordsAndPictures</string>
 	<key>PROJECT_ID</key>
-	<string>independentactivitysampleapp</string>
+	<string>matchingwordsandpictures</string>
 	<key>STORAGE_BUCKET</key>
-	<string>independentactivitysampleapp.appspot.com</string>
+	<string>matchingwordsandpictures.appspot.com</string>
 	<key>IS_ADS_ENABLED</key>
 	<false></false>
 	<key>IS_ANALYTICS_ENABLED</key>
@@ -25,6 +25,6 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:553411029106:ios:192ce5c5ed0441f2ebfaeb</string>
+	<string>1:182753575099:ios:9cc8582d5ef48c818a299e</string>
 </dict>
 </plist>
