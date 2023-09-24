@@ -1,49 +1,17 @@
 //
-//  ImageTextRegisterView.swift
+//  ImagePicker.swift
 //  MatchingWordsAndPictures
 //
-//  Created by sako0602 on 2023/09/06.
+//  Created by sako0602 on 2023/09/23.
 //
 
+import Foundation
 import SwiftUI
-
-struct ImageTextRegisterView: View {
-    
-    @State private var rows: [ImageText] = Array(repeating: ImageText(), count: 4)
-    
-    @State var showingPicker = false
-    @State var image: UIImage?
-    @State var text = ""
-    
-    var body: some View {
-        NavigationStack{
-            GeometryReader { geometry in
-                ZStack{
-                    Color.cyan.ignoresSafeArea(.all)
-                    VStack{
-                        VStack{
-                            Spacer()
-                            ForEach(0..<rows.count, id: \.self){ index in
-                                ImageTextRegisterRowView(text: $rows[index].text, uiImage: $rows[index].image)
-                            }
-                            Spacer()
-                        }
-                        NavigationLink("問題に挑戦する") {
-                            MatingView()
-                        }
-                        .foregroundColor(.white)
-                    }
-                }
-            }
-        }
-    }
-}
-
 //MARK: -
 
 //UIViewControllerRepresentable : ViewControllerを作成・更新・破棄するためにそのメソッドを使用する。
 //SwiftUIビューと協調させたい場合、それらの相互作用を促進するためにコーディネーターのインスタンスを提供する必要がある。
-struct ImagePickerView: UIViewControllerRepresentable {
+struct ImagePicker: UIViewControllerRepresentable {
     
     typealias UIViewControllerType = UIImagePickerController
     
@@ -80,9 +48,9 @@ struct ImagePickerView: UIViewControllerRepresentable {
     
     //MARK: -
     class Coordinator: NSObject, UINavigationControllerDelegate, UIImagePickerControllerDelegate {
-        let parent: ImagePickerView
+        let parent: ImagePicker
 
-        init(_ parent: ImagePickerView) {
+        init(_ parent: ImagePicker) {
             self.parent = parent
         }
 
@@ -94,13 +62,5 @@ struct ImagePickerView: UIViewControllerRepresentable {
             }
             parent.presentationMode.wrappedValue.dismiss()
         }
-    }
-}
-
-
-
-struct ImageTextRegisterView_Previews: PreviewProvider {
-    static var previews: some View {
-        ImageTextRegisterView()
     }
 }
