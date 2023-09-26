@@ -27,7 +27,8 @@ struct MatchingWordsAndPicturesApp: App {
     
     var body: some Scene {
         WindowGroup {
-            UpdatePictureView()
+//            UpdatePictureView()
+            DownloadTextFirebase()
 //            AuthView()
 //            SignUpView(currentShowingView: .constant(.signUp))
 //            ImageTextRegisterView()

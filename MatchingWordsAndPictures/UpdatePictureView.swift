@@ -47,7 +47,7 @@ struct UpdatePictureView: View {
         firestore.collection("userTexts").document("sako").getDocument { document, err in
             if let document = document, document.exists{
                 let data = document.data()
-                saveText = data?["text"] as? String ?? "値なし"
+                saveText = data?["momo"] as? String ?? "値なし"
             }
         }
     }

@@ -7,12 +7,48 @@
 
 import SwiftUI
 
-
-
 struct DownloadTextFirebase: View {
+    
+    @State private var downloadImage: UIImage?
+    
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        VStack{
+            if let image = downloadImage {
+                Image(uiImage: image)
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 300)
+            }
+//            Image("sakoda")
+//                .resizable()
+//                .scaledToFit()
+//                .frame(width: 300)
+            Button("画像をアップロード"){
+                update()
+            }
+            Button("画像をダウンロード"){
+                download()
+            }
+        }
     }
+    
+    func update(){
+        let storageFB = FirebaseManager.shared.storage.reference(forURL: "gs://matchingwordsandpictures.appspot.com/").child("sakodaNoPicture")
+        let image = UIImage(named: "sakoda.jpg")
+        let data = image!.jpegData(compressionQuality: 1.0)!
+        storageFB.putData(data as Data, metadata: nil) { (data, error) in
+            if error != nil {
+                return
+            }
+        }
+    }
+    
+    func download(){
+        FirebaseManager.shared.fetchpPictureData { uiImage in
+            downloadImage = uiImage
+        }
+    }
+    
 }
 
 struct DownloadTextFirebase_Previews: PreviewProvider {
