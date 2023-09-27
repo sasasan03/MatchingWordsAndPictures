@@ -17,7 +17,6 @@ struct NameRowView: View {
         @State var musicPlayer: AVAudioPlayer!
         @State private var count = 0
         @State private var picture = "atsuko"
-    //    @State private var isPressed = false
         
         let correctData = NSDataAsset(name: "correctSound")!.data
         let incorrectData = NSDataAsset(name: "wrongSound")!.data

@@ -7,6 +7,14 @@
 
 import SwiftUI
 
+struct ImageData{
+    var imageURL: String
+}
+
+class FirebseStorageData{
+    private var imageURL: ImageData?
+}
+
 struct DownloadTextFirebase: View {
     
     @State private var downloadImage: UIImage?

@@ -35,6 +35,7 @@
 		69F37A5F2AB866AB0081727D /* MatingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69F37A5E2AB866AB0081727D /* MatingView.swift */; };
 		69FF2A4A2AC0173200498576 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 69FF2A492AC0173200498576 /* GoogleService-Info.plist */; };
 		69FF2A4C2AC0214400498576 /* DownloadTextFirebase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69FF2A4B2AC0214400498576 /* DownloadTextFirebase.swift */; };
+		69FF2A4E2AC46BE700498576 /* FirebaseStorageManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69FF2A4D2AC46BE700498576 /* FirebaseStorageManager.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -83,6 +84,7 @@
 		69F37A5E2AB866AB0081727D /* MatingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MatingView.swift; sourceTree = "<group>"; };
 		69FF2A492AC0173200498576 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		69FF2A4B2AC0214400498576 /* DownloadTextFirebase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadTextFirebase.swift; sourceTree = "<group>"; };
+		69FF2A4D2AC46BE700498576 /* FirebaseStorageManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirebaseStorageManager.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -191,6 +193,7 @@
 				690B758A2ABDA61B006E6882 /* UpdatePictureView.swift */,
 				69FF2A4B2AC0214400498576 /* DownloadTextFirebase.swift */,
 				690B75942ABEB983006E6882 /* FirebaseManager.swift */,
+				69FF2A4D2AC46BE700498576 /* FirebaseStorageManager.swift */,
 				690B758D2ABE9E7A006E6882 /* View */,
 				69D545FB2AA89B4200D2A6E9 /* Model */,
 				69BD0C442A610A0700DD7041 /* Assets.xcassets */,
@@ -414,6 +417,7 @@
 				697B6F332ABD5CF200FA6803 /* SignRowView.swift in Sources */,
 				697B6F2D2ABD5CC900FA6803 /* LoginSuccessView.swift in Sources */,
 				690B758F2ABE9EC6006E6882 /* ImagePicker.swift in Sources */,
+				69FF2A4E2AC46BE700498576 /* FirebaseStorageManager.swift in Sources */,
 				697B6F2F2ABD5CDD00FA6803 /* AuthView.swift in Sources */,
 				69FF2A4C2AC0214400498576 /* DownloadTextFirebase.swift in Sources */,
 				69BD0C412A610A0600DD7041 /* MatchingWordsAndPicturesApp.swift in Sources */,
