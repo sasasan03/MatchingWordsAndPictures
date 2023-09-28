@@ -6,54 +6,79 @@
 //
 
 import SwiftUI
+import FirebaseCore
+import FirebaseFirestore
+import FirebaseStorage
+import Firebase
 
-struct ImageData{
-    var imageURL: String
+struct userInfo: Identifiable, Codable{
+    var id = UUID().uuidString
+    let role: String
 }
 
-class FirebseStorageData{
-    private var imageURL: ImageData?
-}
 
 struct DownloadTextFirebase: View {
     
-    @State private var downloadImage: UIImage?
+    @State private var userRole = ""
+    @State private var image:UIImage?
+    
+    var uid = Auth.auth().currentUser?.uid ?? ""
     
     var body: some View {
         VStack{
-            if let image = downloadImage {
-                Image(uiImage: image)
+            if let image = image {
+               Image(uiImage: image)
                     .resizable()
                     .scaledToFit()
-                    .frame(width: 300)
+                    .frame(width: 300,height: 400)
             }
-//            Image("sakoda")
-//                .resizable()
-//                .scaledToFit()
-//                .frame(width: 300)
-            Button("画像をアップロード"){
-                update()
+
+            Text("UserRole：\(userRole)")
+            
+            if userRole == "admin" {
+                Button("画像をアップロード"){
+                    uplodeImage()
+                }
             }
+            
             Button("画像をダウンロード"){
-                download()
+                downloadImage()
+            }
+        }
+        .onAppear {
+            Task {
+//                try await fetchUserRole()
             }
         }
     }
     
-    func update(){
-        let storageFB = FirebaseManager.shared.storage.reference(forURL: "gs://matchingwordsandpictures.appspot.com/").child("sakodaNoPicture")
-        let image = UIImage(named: "sakoda.jpg")
-        let data = image!.jpegData(compressionQuality: 1.0)!
-        storageFB.putData(data as Data, metadata: nil) { (data, error) in
-            if error != nil {
-                return
+    func fetchUserRole() async throws{
+        let db = Firestore.firestore()
+        let docRef = db.collection("users").document(uid)
+        do {
+            let document = try await docRef.getDocument()
+            if let data = document.data() {
+                self.userRole = data["role"] as? String ?? ""
             }
+        }catch {
+            print("フェッチエラー")
         }
     }
     
-    func download(){
-        FirebaseManager.shared.fetchpPictureData { uiImage in
-            downloadImage = uiImage
+    func uplodeImage(){
+        guard let image = image, let data = image.jpegData(compressionQuality: 0.6) else { return }
+        let storageRef = Storage.storage().reference().child("someDirectory/sakoda.png")
+        storageRef.putData(data, metadata: nil)
+    }
+    
+    func downloadImage(){
+        let storageRef = Storage.storage().reference().child("someDirectory/sakoda.png")
+        storageRef.getData(maxSize: Int64(10 * 1024 * 1024)) { data, error in
+            if let imageData = data {
+                self.image = UIImage(data: imageData)
+            } else if let error = error {
+                print("Error fetching data: \(error.localizedDescription)")
+            }
         }
     }
     

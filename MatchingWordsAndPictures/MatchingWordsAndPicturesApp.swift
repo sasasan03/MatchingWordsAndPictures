@@ -9,6 +9,7 @@
 
 import SwiftUI
 import FirebaseCore
+import FirebaseFirestore
 
 class AppDelegate: NSObject, UIApplicationDelegate {
   func application(_ application: UIApplication,
@@ -27,15 +28,14 @@ struct MatchingWordsAndPicturesApp: App {
     
     var body: some Scene {
         WindowGroup {
-//            UpdatePictureView()
-            DownloadTextFirebase()
 //            AuthView()
 //            SignUpView(currentShowingView: .constant(.signUp))
-//            ImageTextRegisterView()
+            DownloadTextFirebase()
         }
     }
     
     init(){
         FirebaseApp.configure()
+        let db = Firestore.firestore()
     }
 }
