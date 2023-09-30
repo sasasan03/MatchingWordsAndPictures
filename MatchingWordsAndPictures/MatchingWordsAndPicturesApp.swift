@@ -4,9 +4,6 @@
 //
 //  Created by sako0602 on 2023/07/14.
 //
-
-
-
 import SwiftUI
 import FirebaseCore
 import FirebaseFirestore
@@ -36,6 +33,6 @@ struct MatchingWordsAndPicturesApp: App {
     
     init(){
         FirebaseApp.configure()
-        let db = Firestore.firestore()
+//        let db = Firestore.firestore()
     }
 }

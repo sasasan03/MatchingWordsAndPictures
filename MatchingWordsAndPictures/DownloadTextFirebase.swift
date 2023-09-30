@@ -45,15 +45,19 @@ struct DownloadTextFirebase: View {
                 downloadImage()
             }
         }
-        .onAppear {
-            Task {
-//                try await fetchUserRole()
+        .task {
+            do {
+                try await fetchUserRole()
+            } catch {
+                print("on")
             }
+            
         }
     }
     
     func fetchUserRole() async throws{
         let db = Firestore.firestore()
+        print("🍔db：",db)
         let docRef = db.collection("users").document(uid)
         do {
             let document = try await docRef.getDocument()
@@ -61,7 +65,7 @@ struct DownloadTextFirebase: View {
                 self.userRole = data["role"] as? String ?? ""
             }
         }catch {
-            print("フェッチエラー")
+            print("🍔フェッチエラー")
         }
     }
     
@@ -72,12 +76,14 @@ struct DownloadTextFirebase: View {
     }
     
     func downloadImage(){
+        print("🍔uid：",uid)
         let storageRef = Storage.storage().reference().child("someDirectory/sakoda.png")
+        print("🍔storageRf：",storageRef)
         storageRef.getData(maxSize: Int64(10 * 1024 * 1024)) { data, error in
             if let imageData = data {
                 self.image = UIImage(data: imageData)
             } else if let error = error {
-                print("Error fetching data: \(error.localizedDescription)")
+                print("🍔Error fetching data: \(error.localizedDescription)")
             }
         }
     }
