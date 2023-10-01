@@ -20,7 +20,7 @@ struct userInfo: Identifiable, Codable{
 struct DownloadTextFirebase: View {
     
     @State private var userRole = ""
-    @State private var image:UIImage?
+    @State private var image:UIImage? = UIImage(named: "sakoda")
     
     var uid = Auth.auth().currentUser?.uid ?? ""
     
@@ -35,6 +35,10 @@ struct DownloadTextFirebase: View {
 
             Text("UserRole：\(userRole)")
             
+            Button("画像をアップロード"){
+                uplodeImage()
+            }
+            
             if userRole == "admin" {
                 Button("画像をアップロード"){
                     uplodeImage()
@@ -47,33 +51,62 @@ struct DownloadTextFirebase: View {
         }
         .task {
             do {
-                try await fetchUserRole()
+//                try await fetchUserRole(storageRef: )
             } catch {
                 print("on")
             }
             
         }
     }
-    
-    func fetchUserRole() async throws{
-        let db = Firestore.firestore()
-        print("🍔db：",db)
-        let docRef = db.collection("users").document(uid)
+    //TODO: クラッシュの内容の原因
+    func fetchUserRole(storageRef: StorageReference) async throws {
+        do {
+//             let downloadURL = storageRef.downloadURL()
+            
+        } catch {
+            print("エラー")
+        }
+        
+    }
+    func fetchUserRole() async throws {
+        let db = Storage.storage()
+//        let db = Firestore.firestore()
+
+//            .collection("users").document(uid)
         do {
             let document = try await docRef.getDocument()
             if let data = document.data() {
                 self.userRole = data["role"] as? String ?? ""
+                }
+            }catch {
+                print("🍔フェッチエラー")
             }
-        }catch {
-            print("🍔フェッチエラー")
         }
-    }
     
     func uplodeImage(){
         guard let image = image, let data = image.jpegData(compressionQuality: 0.6) else { return }
+        print("🟠")
         let storageRef = Storage.storage().reference().child("someDirectory/sakoda.png")
+        print("🔴")
         storageRef.putData(data, metadata: nil)
+        print("🟡")
     }
+    
+//    func uplodeImage(){
+//
+//        let storageRef = Storage.storage().reference().child("someDirectory/sakoda.png")
+//
+//        guard let image = image, let data = image.jpegData(compressionQuality: 0.6) else { return }
+//
+//        do {
+//            print("🟠")
+//            try storageRef.putData(data, metadata: nil)
+//        } catch {
+//            print("🔴")
+//
+//        }
+//        print("🟡")
+//    }
     
     func downloadImage(){
         print("🍔uid：",uid)
