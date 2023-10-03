@@ -7,6 +7,8 @@
 import SwiftUI
 import FirebaseCore
 import FirebaseFirestore
+import FirebaseAuth
+import FirebaseStorage
 
 class AppDelegate: NSObject, UIApplicationDelegate {
   func application(_ application: UIApplication,
@@ -19,9 +21,14 @@ class AppDelegate: NSObject, UIApplicationDelegate {
 
 @main
 struct MatchingWordsAndPicturesApp: App {
+    
+    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+        FirebaseApp.configure()
+        return true
+    }
 
     //TODO: こいつがコメントアウトされていないとクラッシュが起こる
-//    @UIApplicationDelegateAdaptor(AppDelegate.self) var delegate
+      @UIApplicationDelegateAdaptor(AppDelegate.self) var delegate
     
     var body: some Scene {
         WindowGroup {
