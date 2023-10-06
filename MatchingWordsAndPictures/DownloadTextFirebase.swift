@@ -19,8 +19,9 @@ struct userInfo: Identifiable, Codable{
 
 struct DownloadTextFirebase: View {
     
-    @State private var userRole = ""
-    @State private var image:UIImage? = UIImage(named: "sakoda")
+    @State private var userRole = "" //UIDになる
+    @State private var image:UIImage? //= UIImage(named: "sakoda")
+    @State private var sampleMan:UIImage? = UIImage(named: "sampleMan")
     
     var uid = Auth.auth().currentUser?.uid ?? ""
     
@@ -31,86 +32,73 @@ struct DownloadTextFirebase: View {
                     .resizable()
                     .scaledToFit()
                     .frame(width: 300,height: 400)
+            } else {
+                Color.red.frame(width: 300, height: 200)
             }
 
             Text("UserRole：\(userRole)")
+                .padding()
             
-            Button("画像をアップロード"){
-                uplodeImage()
-            }
+//            Button("画像をアップロード"){
+//                uplodeImage()
+//            }
+//            .padding()
             
-            if userRole == "admin" {
-                Button("画像をアップロード"){
+            if userRole == "" { //🟥Authからadminというuidを取得してこいってことか？
+                Button("admin　アップロード"){
                     uplodeImage()
                 }
+            } else {
+                Text("admin がない")
             }
             
             Button("画像をダウンロード"){
                 downloadImage()
             }
+            .padding()
         }
         .task {
             do {
-//                try await fetchUserRole(storageRef: )
+//                try await fetchUserRole()
             } catch {
                 print("on")
             }
             
         }
     }
-    //TODO: クラッシュの内容の原因
-    func fetchUserRole(storageRef: StorageReference) async throws {
-        do {
-//             let downloadURL = storageRef.downloadURL()
-            
-        } catch {
-            print("エラー")
-        }
-        
-    }
-    func fetchUserRole() async throws {
-        let db = Storage.storage()
-//        let db = Firestore.firestore()
 
-//            .collection("users").document(uid)
+    //TODO: ここだけなぜFirestoreを参照しているのかがわからない
+    func fetchUserRole() async throws {
+        
+        let db = Firestore.firestore().collection("users").document(uid)
         do {
-            let document = try await docRef.getDocument()
+            let document = try await db.getDocument()
             if let data = document.data() {
                 self.userRole = data["role"] as? String ?? ""
                 }
             }catch {
-                print("🍔フェッチエラー")
+                print("🍔 fetch error ")
             }
         }
     
+    //TODO: 検証する
     func uplodeImage(){
-        guard let image = image, let data = image.jpegData(compressionQuality: 0.6) else { return }
+        guard let image = sampleMan, let data = image.jpegData(compressionQuality: 0.6) else { return print("🍔 image nil error") }
         print("🟠")
-        let storageRef = Storage.storage().reference().child("someDirectory/sakoda.png")
+        let storageRef = Storage.storage().reference().child("someDirectory/sampleMan.png")
         print("🔴")
         storageRef.putData(data, metadata: nil)
         print("🟡")
     }
     
-//    func uplodeImage(){
-//
-//        let storageRef = Storage.storage().reference().child("someDirectory/sakoda.png")
-//
-//        guard let image = image, let data = image.jpegData(compressionQuality: 0.6) else { return }
-//
-//        do {
-//            print("🟠")
-//            try storageRef.putData(data, metadata: nil)
-//        } catch {
-//            print("🔴")
-//
-//        }
-//        print("🟡")
-//    }
-    
+    //🟦検証済み
     func downloadImage(){
         print("🍔uid：",uid)
         let storageRef = Storage.storage().reference().child("someDirectory/sakoda.png")
+        let fullpath = storageRef.fullPath
+        let name = storageRef.name
+        let bucket = storageRef.bucket
+        print("🍑",fullpath,"🍑",name,"🍑",bucket)
         print("🍔storageRf：",storageRef)
         storageRef.getData(maxSize: Int64(10 * 1024 * 1024)) { data, error in
             if let imageData = data {

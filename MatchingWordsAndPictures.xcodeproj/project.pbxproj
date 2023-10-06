@@ -85,6 +85,7 @@
 		69FF2A492AC0173200498576 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		69FF2A4B2AC0214400498576 /* DownloadTextFirebase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadTextFirebase.swift; sourceTree = "<group>"; };
 		69FF2A4D2AC46BE700498576 /* FirebaseStorageManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirebaseStorageManager.swift; sourceTree = "<group>"; };
+		69FF2A852ACC277B00498576 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -188,6 +189,7 @@
 		69BD0C3F2A610A0600DD7041 /* MatchingWordsAndPictures */ = {
 			isa = PBXGroup;
 			children = (
+				69FF2A852ACC277B00498576 /* Info.plist */,
 				69FF2A492AC0173200498576 /* GoogleService-Info.plist */,
 				69BD0C402A610A0600DD7041 /* MatchingWordsAndPicturesApp.swift */,
 				690B758A2ABDA61B006E6882 /* UpdatePictureView.swift */,
@@ -583,6 +585,7 @@
 				DEVELOPMENT_TEAM = 6NMWZ48XL4;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = MatchingWordsAndPictures/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -613,6 +616,7 @@
 				DEVELOPMENT_TEAM = 6NMWZ48XL4;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = MatchingWordsAndPictures/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
