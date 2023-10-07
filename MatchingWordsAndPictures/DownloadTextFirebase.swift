@@ -46,7 +46,7 @@ struct DownloadTextFirebase: View {
             
             if userRole == "" { //🟥Authからadminというuidを取得してこいってことか？
                 Button("admin　アップロード"){
-                    uplodeImage()
+                    guard let aaa =  uplodeImage() else { return }
                 }
             } else {
                 Text("admin がない")
@@ -69,7 +69,8 @@ struct DownloadTextFirebase: View {
 
     //TODO: ここだけなぜFirestoreを参照しているのかがわからない
     func fetchUserRole() async throws {
-        
+        let storageRef = Storage.storage().reference()
+        let imageRef = storageRef.child("someDirectory/sampleMan.jpg")
         let db = Firestore.firestore().collection("users").document(uid)
         do {
             let document = try await db.getDocument()
@@ -82,14 +83,29 @@ struct DownloadTextFirebase: View {
         }
     
     //TODO: 検証する
-    func uplodeImage(){
-        guard let image = sampleMan, let data = image.jpegData(compressionQuality: 0.6) else { return print("🍔 image nil error") }
-        print("🟠")
-        let storageRef = Storage.storage().reference().child("someDirectory/sampleMan.png")
-        print("🔴")
-        storageRef.putData(data, metadata: nil)
-        print("🟡")
+//    func uplodeImage(){
+//        guard let image = sampleMan, let data = image.jpegData(compressionQuality: 0.6) else { return print("🍔 image nil error") }
+//        print("🟠")
+//        let storageRef = Storage.storage().reference().child("someDirectory/sampleMan.png")
+//        print("🔴")
+//        storageRef.putData(data, metadata: nil)
+//        print("🟡")
+//    }
+    func uplodeImage() -> StorageUploadTask? {
+        guard let imageS = UIImage(named: "sampleMan") else { return nil }
+        guard let data = imageS.pngData() else { return nil }
+        let storageRef = Storage.storage().reference()
+        let imageRef = storageRef.child("sampleMan")
+        let uploadTask = imageRef.putData(data) { metadata, error in
+            guard let metadata = metadata else {
+                return
+            }
+            //
+//            let size = metadata.size
+        }
+        return uploadTask
     }
+    
     
     //🟦検証済み
     func downloadImage(){
