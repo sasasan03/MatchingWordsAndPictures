@@ -22,6 +22,7 @@ struct DownloadTextFirebase: View {
     @State private var userRole = "" //UIDになる
     @State private var image:UIImage? //= UIImage(named: "sakoda")
     @State private var sampleMan:UIImage? = UIImage(named: "sampleMan")
+//    @State private var images:[UIImage]
     
     var uid = Auth.auth().currentUser?.uid ?? ""
     
@@ -39,14 +40,9 @@ struct DownloadTextFirebase: View {
             Text("UserRole：\(userRole)")
                 .padding()
             
-//            Button("画像をアップロード"){
-//                uplodeImage()
-//            }
-//            .padding()
-            
             if userRole == "" { //🟥Authからadminというuidを取得してこいってことか？
                 Button("admin　アップロード"){
-                    guard let aaa =  uplodeImage() else { return }
+                  uplodeImage()
                 }
             } else {
                 Text("admin がない")
@@ -54,12 +50,22 @@ struct DownloadTextFirebase: View {
             
             Button("画像をダウンロード"){
                 downloadImage()
+//                getMetadata()
             }
             .padding()
+            
+//            Button("画像を削除"){
+//                detaDelete()
+//            }
+            Button("画像のリストを表示"){
+//                fetchImage(at: "someDirectory")
+//                fetchImage(at: "images/")
+                listSample()
+            }
         }
         .task {
             do {
-//                try await fetchUserRole()
+//                try await images = fetchImage(at: "someDirectory/uid")
             } catch {
                 print("on")
             }
@@ -82,40 +88,113 @@ struct DownloadTextFirebase: View {
             }
         }
     
-    //TODO: 検証する
-//    func uplodeImage(){
-//        guard let image = sampleMan, let data = image.jpegData(compressionQuality: 0.6) else { return print("🍔 image nil error") }
-//        print("🟠")
-//        let storageRef = Storage.storage().reference().child("someDirectory/sampleMan.png")
-//        print("🔴")
-//        storageRef.putData(data, metadata: nil)
-//        print("🟡")
+    func listSample(pageToken: String? = nil){
+        print("🟦")
+        let storageRef = Storage.storage().reference()
+        let childRef = storageRef.child("images")
+        let pageHandler: (StorageListResult?, Error?) -> Void = { result, error in
+            if let error = error {
+                print("###", error)
+            }
+            guard let result = result else { return print("result empty")}
+//            let prifixes = result.prefixes
+//            let items = result.items
+            if let token = result.pageToken {
+                self.listSample(pageToken: token)
+            }
+        }
+        print("🟥")
+        if let pageToken = pageToken {
+            childRef.list(maxResults: 1, pageToken: pageToken, completion: pageHandler)
+        } else {
+            childRef.list(maxResults: 1, completion: pageHandler)
+        }
+        print("🟨")
+    }
+    
+    func fetchImage(at path: String) {
+        let storageRef = Storage.storage().reference()
+        let imageRef = storageRef.child(path)
+        imageRef.listAll { result, error in
+            if let error = error {
+                print("###", error)
+            }
+            guard let resutlt = result else { return }
+            //サブディレクトリ（prefixes）の表示
+            for prefix in resutlt.prefixes {
+                print("$$$Dictionaly：", prefix)
+            }
+            for item in resutlt.items {
+                print("&&&file：", item)
+            }
+            
+        }
+        storageRef.listAll { result, err in
+            guard let reult = result else { return }
+            if let err = err {
+                print(err)
+            }
+//            print("0000",reult.items)
+            print("1111",reult.prefixes)
+        }
+        
+    }
+    
+//    func detaDelete(){
+//        print(#function)
+//        let storageRef = Storage.storage().reference()
+//        let sample = storageRef.child("Sample/sampleMan")
+//
+//        sample.delete { err in
+//            if let err = err {
+//                print("###",err)
+//            } else {
+//                print("$$$ delte successfully")
+//            }
+//        }
 //    }
+    
+    
+//   //🟥メタデータ
+//    func getMetadata(){
+//        print(#function)
+//        let storageRef = Storage.storage().reference()
+//        let sakodaRef = storageRef.child("someDirectory/sakoda.png")
+//
+//        sakodaRef.getMetadata { metadata, err in
+//            if let err = err {
+//                print("###",err)
+//            } else {
+//                print(metadata?.description)
+//            }
+//        }
+//    }
+    
+    //TODO: 検証する,nilで返すの微妙
     func uplodeImage() -> StorageUploadTask? {
         guard let imageS = UIImage(named: "sampleMan") else { return nil }
         guard let data = imageS.pngData() else { return nil }
         let storageRef = Storage.storage().reference()
-        let imageRef = storageRef.child("sampleMan")
+        //どこへ保存したいの？保存場所を作成し、その中へ画像を放り込む
+        let imageRef = storageRef.child("Sample/sampleMan")
         let uploadTask = imageRef.putData(data) { metadata, error in
             guard let metadata = metadata else {
                 return
             }
-            //
+            //サイズの指定も可能
 //            let size = metadata.size
         }
         return uploadTask
     }
     
+
     
     //🟦検証済み
     func downloadImage(){
-        print("🍔uid：",uid)
-        let storageRef = Storage.storage().reference().child("someDirectory/sakoda.png")
-        let fullpath = storageRef.fullPath
-        let name = storageRef.name
-        let bucket = storageRef.bucket
-        print("🍑",fullpath,"🍑",name,"🍑",bucket)
-        print("🍔storageRf：",storageRef)
+        let storageRef = Storage.storage().reference().child("someDirectory")
+//        let fullpath = storageRef.fullPath
+//        let name = storageRef.name
+//        let bucket = storageRef.bucket
         storageRef.getData(maxSize: Int64(10 * 1024 * 1024)) { data, error in
             if let imageData = data {
                 self.image = UIImage(data: imageData)
