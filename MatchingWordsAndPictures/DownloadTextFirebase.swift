@@ -16,51 +16,99 @@ struct userInfo: Identifiable, Codable{
     let role: String
 }
 
+struct FirebaseImageView: View  {
+    @State private var image: UIImage?
+    let imageUrl: URL
+    var body: some View {
+        Image(uiImage: image ?? UIImage())
+            .resizable()
+            .onAppear(perform: loadImage)
+    }
+    
+    func loadImage(){
+        URLSession.shared.dataTask(with: imageUrl) { data, _, _ in
+            if let data = data, let image = UIImage(data: data) {
+                DispatchQueue.main.async {
+                    self.image = image
+                }
+            }
+        }.resume()
+    }
+}
 
 struct DownloadTextFirebase: View {
     
     @State private var userRole = "" //UIDになる
     @State private var image:UIImage? //= UIImage(named: "sakoda")
     @State private var sampleMan:UIImage? = UIImage(named: "sampleMan")
-//    @State private var images:[UIImage]
+    @State private var imageURLs:[URL] = []
     
     var uid = Auth.auth().currentUser?.uid ?? ""
     
-    var body: some View {
-        VStack{
-            if let image = image {
-               Image(uiImage: image)
-                    .resizable()
-                    .scaledToFit()
-                    .frame(width: 300,height: 400)
-            } else {
-                Color.red.frame(width: 300, height: 200)
+    func loadImage(){
+        let storage = Storage.storage().reference().child("images/uid")//🟥最後に/をつけて試してみる
+        storage.listAll { result, error in
+            guard let result = result else { return }
+            if let error = error {
+                print("###", error)
             }
-
-            Text("UserRole：\(userRole)")
-                .padding()
-            
-            if userRole == "" { //🟥Authからadminというuidを取得してこいってことか？
-                Button("admin　アップロード"){
-                  uplodeImage()
+            for item in result.items {
+                item.downloadURL { url, error in
+                    if let url = url {
+//                        DispatchQueue.main.async {
+                            imageURLs.append(url)
+//                        }
+                    }
                 }
-            } else {
-                Text("admin がない")
             }
+        }
+    }
+    
+    var body: some View {
+        HStack{
             
-            Button("画像をダウンロード"){
-                downloadImage()
-//                getMetadata()
+            //MARK: -
+            List(imageURLs, id: \.self){ url in
+                FirebaseImageView(imageUrl: url)
             }
-            .padding()
+            .onAppear(perform: loadImage)
             
-//            Button("画像を削除"){
-//                detaDelete()
-//            }
-            Button("画像のリストを表示"){
-//                fetchImage(at: "someDirectory")
-//                fetchImage(at: "images/")
-                listSample()
+            //MARK: -
+            VStack{
+                if let image = image {
+                    Image(uiImage: image)
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 300,height: 400)
+                } else {
+                    Color.red.frame(width: 300, height: 200)
+                }
+                
+                Text("UserRole：\(userRole)")
+                    .padding()
+                
+                if userRole == "" { //🟥Authからadminというuidを取得してこいってことか？
+                    Button("admin　アップロード"){
+                        uplodeImage()
+                    }
+                } else {
+                    Text("admin がない")
+                }
+                
+                Button("画像をダウンロード"){
+                    downloadImage()
+                    //                getMetadata()
+                }
+                .padding()
+                
+                //            Button("画像を削除"){
+                //                detaDelete()
+                //            }
+                Button("画像のリストを表示"){
+                    //                fetchImage(at: "someDirectory")
+                    //                fetchImage(at: "images/")
+                    listSample()
+                }
             }
         }
         .task {
@@ -73,7 +121,7 @@ struct DownloadTextFirebase: View {
         }
     }
 
-    //TODO: ここだけなぜFirestoreを参照しているのかがわからない
+    //MARK: - ここだけなぜFirestoreを参照しているのかがわからない
     func fetchUserRole() async throws {
         let storageRef = Storage.storage().reference()
         let imageRef = storageRef.child("someDirectory/sampleMan.jpg")
@@ -87,9 +135,8 @@ struct DownloadTextFirebase: View {
                 print("🍔 fetch error ")
             }
         }
-    
+    //MARK: -
     func listSample(pageToken: String? = nil){
-        print("🟦")
         let storageRef = Storage.storage().reference()
         let childRef = storageRef.child("images")
         let pageHandler: (StorageListResult?, Error?) -> Void = { result, error in
@@ -103,15 +150,13 @@ struct DownloadTextFirebase: View {
                 self.listSample(pageToken: token)
             }
         }
-        print("🟥")
         if let pageToken = pageToken {
             childRef.list(maxResults: 1, pageToken: pageToken, completion: pageHandler)
         } else {
             childRef.list(maxResults: 1, completion: pageHandler)
         }
-        print("🟨")
     }
-    
+    //MARK: -
     func fetchImage(at path: String) {
         let storageRef = Storage.storage().reference()
         let imageRef = storageRef.child(path)
@@ -135,11 +180,10 @@ struct DownloadTextFirebase: View {
                 print(err)
             }
 //            print("0000",reult.items)
-            print("1111",reult.prefixes)
+//            print("1111",reult.prefixes)
         }
-        
     }
-    
+    //MARK: -
 //    func detaDelete(){
 //        print(#function)
 //        let storageRef = Storage.storage().reference()
@@ -154,7 +198,7 @@ struct DownloadTextFirebase: View {
 //        }
 //    }
     
-    
+    //MARK: -
 //   //🟥メタデータ
 //    func getMetadata(){
 //        print(#function)
@@ -169,7 +213,7 @@ struct DownloadTextFirebase: View {
 //            }
 //        }
 //    }
-    
+    //MARK: -
     //TODO: 検証する,nilで返すの微妙
     func uplodeImage() -> StorageUploadTask? {
         guard let imageS = UIImage(named: "sampleMan") else { return nil }
@@ -187,8 +231,7 @@ struct DownloadTextFirebase: View {
         return uploadTask
     }
     
-
-    
+    //MARK: -
     //🟦検証済み
     func downloadImage(){
         let storageRef = Storage.storage().reference().child("someDirectory")

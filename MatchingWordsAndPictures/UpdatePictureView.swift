@@ -26,7 +26,10 @@ struct UpdatePictureView: View {
                     .padding()
                     .textFieldStyle(.roundedBorder)
                 Button("保存"){
-                    saveTextToFirestore(text: inputText)
+                    updataSubcollection()
+//                    sampleGetDocumetn()
+//                    saveTextToFirestore(text: inputText)
+//                    uploadSample(str: "ここ",str2: "もも")
                 }
                 .padding()
                 
@@ -36,6 +39,72 @@ struct UpdatePictureView: View {
         }
         .onAppear{
             fetchSaveTextFromFirestore()
+        }
+    }
+    
+    func updataSubcollection(){
+        print("###")
+        let docData: [String: Any] = [
+            "stringExample": "Hello world!",
+            "booleanExample": true,
+            "numberExample": 3.14159265,
+            "dateExample": Timestamp(date: Date()),
+            "arrayExample": [5, true, "hello"],
+            "nullExample": NSNull(),
+            "objectExample": [
+                "a": 5,
+                "b": [
+                    "nested": "foo"
+                ]
+            ]
+        ]
+//        firestore.collection("cities").document("LA").setData([
+//                "name": "Los Angeles",
+//                "state": "CA",
+//                "country": "USA"
+//            ]) { err in
+//                if let err = err {
+//                    print("Error writing document: \(err)")
+//                } else {
+//                    print("Document successfully written!")
+//                }
+//            }
+        // Add a new document in collection "cities"
+        firestore.collection("cities").document("LA").setData([ "capital": false ], merge: true)
+//        firestore.collection("data").document("one").setData(docData) { err in
+//            if let err = err {
+//                print("Error writing document: \(err)")
+//            } else {
+//                print("Document successfully written!")
+//            }
+//        }
+    }
+    
+    func sampleGetDocumetn(){
+        firestore.collection("users").getDocuments() { (querySnapshot, err) in
+            if let err = err {
+                print("Error getting documents: \(err)")
+            } else {
+                for document in querySnapshot!.documents {
+                    print("\(document.documentID) => \(document.data())")
+                }
+            }
+        }
+    }
+    
+    func uploadSample(str: String,str2: String){
+        var ref: DocumentReference?
+        ref = firestore.collection("users").addDocument(data: [
+            "first": str,
+            "middle": str2,
+            "last": "masa",
+            "born": 1994,
+        ]) { err in
+            if let err = err {
+                print("Error adding document: \(err)")
+            } else {
+                print("Document added with ID: \(ref!.documentID)")
+            }
         }
     }
     

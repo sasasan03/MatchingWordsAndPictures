@@ -28,16 +28,8 @@ struct MatchingWordsAndPicturesApp: App {
     
     var body: some Scene {
         WindowGroup {
-//            AuthView()
-//            SignUpView(currentShowingView: .constant(.signUp))
-            DownloadTextFirebase()
+//            DownloadTextFirebase()
+            UpdatePictureView()
         }
     }
-    
-    //TODO: クラッシュする
-//    init(){
-////        self._delegate = delegate
-//        FirebaseApp.configure()
-////        let db = Firestore.firestore()
-//    }
 }
