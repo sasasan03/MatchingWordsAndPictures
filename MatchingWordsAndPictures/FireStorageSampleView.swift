@@ -36,7 +36,7 @@ struct FirebaseImageView: View  {
     }
 }
 
-struct DownloadTextFirebase: View {
+struct FireStorageSampleView: View {
     
     @State private var userRole = "" //UIDになる
     @State private var image:UIImage? //= UIImage(named: "sakoda")
@@ -100,7 +100,6 @@ struct DownloadTextFirebase: View {
                     //                getMetadata()
                 }
                 .padding()
-                
                 //            Button("画像を削除"){
                 //                detaDelete()
                 //            }
@@ -249,8 +248,8 @@ struct DownloadTextFirebase: View {
     
 }
 
-struct DownloadTextFirebase_Previews: PreviewProvider {
+struct FireStorageSampleView_Previews: PreviewProvider {
     static var previews: some View {
-        DownloadTextFirebase()
+        FireStorageSampleView()
     }
 }

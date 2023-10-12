@@ -10,7 +10,7 @@ import Firebase
 import FirebaseStorage
 
 
-struct UpdatePictureView: View {
+struct CloudFireStoreSampleView: View {
     
     @State private var inputText: String = ""
     @State private var saveText: String = ""
@@ -139,8 +139,8 @@ struct UpdatePictureView: View {
 //    }
 //}
 
-struct UpdatePictureView_Previews: PreviewProvider {
+struct CloudFireStoreSampleView_Previews: PreviewProvider {
     static var previews: some View {
-        UpdatePictureView()
+        CloudFireStoreSampleView()
     }
 }

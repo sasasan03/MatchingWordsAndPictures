@@ -28,8 +28,7 @@ struct MatchingWordsAndPicturesApp: App {
     
     var body: some Scene {
         WindowGroup {
-//            DownloadTextFirebase()
-            UpdatePictureView()
+            StorageAndFirestoreUploadSampleView()
         }
     }
 }
