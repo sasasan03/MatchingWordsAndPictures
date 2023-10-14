@@ -9,10 +9,10 @@ import SwiftUI
 import FirebaseFirestore
 import FirebaseStorage
 
-struct StorageAndFirestoreUploadSampleView: View {
+struct UploadSampleView: View {
     
     @State var name = "さこだ　ひろみち"
-    @State var imageName = UIImage(named: "sakoda")
+    @State var imageName = UIImage(named: "atsuko")
     
     var body: some View {
         VStack{
@@ -26,11 +26,14 @@ struct StorageAndFirestoreUploadSampleView: View {
                         .frame(width: 350)
                 }
                 Spacer()
+//                TextField("入力してください", text: $name)
+//                    .textFieldStyle(.roundedBorder)
                 Text(name)
                 Spacer()
             }
             Spacer()
             Button(action: {
+                print("jjj")
                 Task{
                     do {
                          try await uploadFirebase()
@@ -38,7 +41,7 @@ struct StorageAndFirestoreUploadSampleView: View {
                         
                     }
                 }
-                
+                print("kkk")
             }, label: {
                 Text("Up Firebase")
                     .frame(width: 250, height: 100)
@@ -48,40 +51,37 @@ struct StorageAndFirestoreUploadSampleView: View {
             Spacer()
         }
     }
-    
+    //TODO: かなり無駄が多いように思えるので、後ほど改善
     func uploadFirebase() async throws {
+        //MARK: Dataへ変換する
         guard let imageName = imageName?.jpegData(compressionQuality: 0.8) else {
             print("🟥no imageName")
             return
         }
-        //MARK: コレクションとドキュメントを指定していない
-        print("🟧")
+        //MARK: リファレンスを作成
         let db = Firestore.firestore().collection("users").document("sampleDocument")
-        print("🟨")
         let storageRef = Storage.storage().reference().child("images/uid")
-        let url: URL
-        print("🐈")
         do {
-            print("😃")
-           url = try await storageRef.downloadURL()
-            print("🔲")
+            //MARK: データを指定したポイントへアップロード
+            let _ = try await storageRef.putData(imageName)
+            //MARK: StorageのURLをダウンロード
+            let url = try await storageRef.downloadURL()
+            //MARK: ダウンロードしてきたURLへ保存するために辞書型にする。
             let nameAndImageURL:[String: Any] = [
                 "name": name,
                 "imageURL": url.absoluteString
             ]
-            print("🔳")
+            //MARK: 
             try await db.setData(nameAndImageURL)
+            print("🟢 Upload successful!")
         } catch {
-            print("valid URL")
+            print("🟥valid URL")
         }
-        
-        
     }
-    
 }
 
-struct StorageAndFirestoreUploadSampleView_Previews: PreviewProvider {
+struct UploadSampleView_Previews: PreviewProvider {
     static var previews: some View {
-        StorageAndFirestoreUploadSampleView()
+        UploadSampleView()
     }
 }

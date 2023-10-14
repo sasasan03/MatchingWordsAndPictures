@@ -28,7 +28,8 @@ struct MatchingWordsAndPicturesApp: App {
     
     var body: some Scene {
         WindowGroup {
-            StorageAndFirestoreUploadSampleView()
+//            UploadSampleView()//⭐️Storageの実験で使用
+            CloudFireStoreSampleView()//⭐️CloudFirestoreの実験で使用
         }
     }
 }

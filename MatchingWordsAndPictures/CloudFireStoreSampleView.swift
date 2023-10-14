@@ -41,9 +41,8 @@ struct CloudFireStoreSampleView: View {
             fetchSaveTextFromFirestore()
         }
     }
-    
+    //⭐️コレクションに保存させる
     func updataSubcollection(){
-        print("###")
         let docData: [String: Any] = [
             "stringExample": "Hello world!",
             "booleanExample": true,
@@ -58,27 +57,25 @@ struct CloudFireStoreSampleView: View {
                 ]
             ]
         ]
-//        firestore.collection("cities").document("LA").setData([
-//                "name": "Los Angeles",
-//                "state": "CA",
-//                "country": "USA"
-//            ]) { err in
-//                if let err = err {
-//                    print("Error writing document: \(err)")
-//                } else {
-//                    print("Document successfully written!")
-//                }
-//            }
-        // Add a new document in collection "cities"
-        firestore.collection("cities").document("LA").setData([ "capital": false ], merge: true)
-//        firestore.collection("data").document("one").setData(docData) { err in
-//            if let err = err {
-//                print("Error writing document: \(err)")
-//            } else {
-//                print("Document successfully written!")
-//            }
-//        }
+        firestore.collection("cities").document("LA")
+            .setData([
+                "from": "石川",
+                "favorite": "野球",//🟥変更部分
+                
+//                "number": 1//🟥削除
+                "dislike": "なす"//🟦新規追加
+            ],
+                     merge: false
+            )
+//            .setData([
+//                "born": "東京",
+//                "favorite": "ディズニーランド"
+//            ],
+//                     merge: false)
     }
+    
+    
+
     
     func sampleGetDocumetn(){
         firestore.collection("users").getDocuments() { (querySnapshot, err) in

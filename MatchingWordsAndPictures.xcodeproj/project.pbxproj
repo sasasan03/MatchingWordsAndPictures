@@ -36,7 +36,8 @@
 		69FF2A4A2AC0173200498576 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 69FF2A492AC0173200498576 /* GoogleService-Info.plist */; };
 		69FF2A4C2AC0214400498576 /* FireStorageSampleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69FF2A4B2AC0214400498576 /* FireStorageSampleView.swift */; };
 		69FF2A4E2AC46BE700498576 /* FirebaseStorageManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69FF2A4D2AC46BE700498576 /* FirebaseStorageManager.swift */; };
-		69FF2A872AD56F1C00498576 /* StorageAndFirestoreUploadSampleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69FF2A862AD56F1C00498576 /* StorageAndFirestoreUploadSampleView.swift */; };
+		69FF2A872AD56F1C00498576 /* UploadSampleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69FF2A862AD56F1C00498576 /* UploadSampleView.swift */; };
+		69FF2A892AD8042E00498576 /* DownloadSampleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69FF2A882AD8042E00498576 /* DownloadSampleView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -87,7 +88,8 @@
 		69FF2A4B2AC0214400498576 /* FireStorageSampleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FireStorageSampleView.swift; sourceTree = "<group>"; };
 		69FF2A4D2AC46BE700498576 /* FirebaseStorageManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirebaseStorageManager.swift; sourceTree = "<group>"; };
 		69FF2A852ACC277B00498576 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
-		69FF2A862AD56F1C00498576 /* StorageAndFirestoreUploadSampleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StorageAndFirestoreUploadSampleView.swift; sourceTree = "<group>"; };
+		69FF2A862AD56F1C00498576 /* UploadSampleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UploadSampleView.swift; sourceTree = "<group>"; };
+		69FF2A882AD8042E00498576 /* DownloadSampleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadSampleView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -196,7 +198,8 @@
 				69BD0C402A610A0600DD7041 /* MatchingWordsAndPicturesApp.swift */,
 				690B758A2ABDA61B006E6882 /* CloudFireStoreSampleView.swift */,
 				69FF2A4B2AC0214400498576 /* FireStorageSampleView.swift */,
-				69FF2A862AD56F1C00498576 /* StorageAndFirestoreUploadSampleView.swift */,
+				69FF2A862AD56F1C00498576 /* UploadSampleView.swift */,
+				69FF2A882AD8042E00498576 /* DownloadSampleView.swift */,
 				690B75942ABEB983006E6882 /* FirebaseManager.swift */,
 				69FF2A4D2AC46BE700498576 /* FirebaseStorageManager.swift */,
 				690B758D2ABE9E7A006E6882 /* View */,
@@ -410,8 +413,9 @@
 			files = (
 				69D545F02AA88D8800D2A6E9 /* Model.swift in Sources */,
 				69D545F22AA88EE700D2A6E9 /* NameRowView.swift in Sources */,
-				69FF2A872AD56F1C00498576 /* StorageAndFirestoreUploadSampleView.swift in Sources */,
+				69FF2A872AD56F1C00498576 /* UploadSampleView.swift in Sources */,
 				697B6F362ABD5D4A00FA6803 /* AuthenticationViewModel.swift in Sources */,
+				69FF2A892AD8042E00498576 /* DownloadSampleView.swift in Sources */,
 				69D545F42AA8974100D2A6E9 /* ImageTextRegisterView.swift in Sources */,
 				697B6F292ABD569100FA6803 /* LoginView.swift in Sources */,
 				697B6F312ABD5CE800FA6803 /* SignUpView.swift in Sources */,
