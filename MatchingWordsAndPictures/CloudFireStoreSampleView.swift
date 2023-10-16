@@ -11,20 +11,36 @@ import FirebaseStorage
 import FirebaseFirestore
 import FirebaseFirestoreSwift
 
+//struct Person: Codable {
+//
+//    let name: String
+//    let age: Int
+//    let favorite: [String]
+//    let isMarried: Bool
+//
+//    enum CodingKeys: String, CodingKey {
+//        case name
+//        case age
+//        case favorite
+//        case isMarried = "Married"
+//    }
+//}
+
 struct Person: Codable {
-    
+    @DocumentID var id: String?
     let name: String
     let age: Int
     let favorite: [String]
     let isMarried: Bool
-    
-    enum CodingKeys: String, CodingKey {
-        case name
-        case age
-        case favorite
-        case isMarried = "Married"
-    }
 }
+
+struct City: Codable{
+    @DocumentID var id: String?
+    var name: String
+    var population: Int
+    var specialProduct:[String]
+}
+
 
 struct CloudFireStoreSampleView: View {
     
@@ -33,6 +49,8 @@ struct CloudFireStoreSampleView: View {
     @State var fetchData:Person
     
     let firestore = Firestore.firestore()
+    let makoto = Person(name: "まこと", age: 32, favorite: ["酒","服"], isMarried: true)
+    let horyu = City(name: "宝立", population: 10000, specialProduct: ["お酒","魚"])
     
     var body: some View {
         ZStack{
@@ -43,11 +61,9 @@ struct CloudFireStoreSampleView: View {
                     .padding()
                     .textFieldStyle(.roundedBorder)
                 Button("保存"){
-                    do {
-                         try updataSubcollection()
-                    } catch {
-                        print("upload Error")
-                    }
+                    addNewCityDoc(city: horyu)
+//                    addNewPersonDoc(person: makoto)
+//                    updataSubcollection()
 //                    sampleGetDocumet()
 //                    saveTextToFirestore(text: inputText)
 //                    uploadSample(str: "ここ",str2: "もも")
@@ -61,7 +77,6 @@ struct CloudFireStoreSampleView: View {
                     Text("\(fetchData.age)")
                     Image(systemName: fetchData.isMarried ? "checkmark.seal.fill" : "pencil")
                     List(fetchData.favorite, id: \.self) { data in
-                        let _ = print("🍔",data)
                         Text(data)
                     }
                 }
@@ -77,26 +92,39 @@ struct CloudFireStoreSampleView: View {
     }
     
     //⭐️フェッチ問題なし。コードは綺麗に書き直す。
+//    func fetchSaveTextFromFirestore()  async throws {
+//        let docRef = firestore.collection("cities").document("BJ")
+//        do {
+//            let dataLA = try await docRef.getDocument()
+////            let id = dataLA.documentID
+//            let data = dataLA.data()
+//            let name = data?["name"] as? String ?? "名前なし"
+//            let age = data?["age"] as? Int ?? 0
+//            let favorite = data?["favorite"] as? [String] ?? ["nil っす"]
+//            let isMarried = data?["isMarried"] as? Bool ?? false
+//            fetchData = Person(name: name, age: age, favorite: favorite, isMarried: isMarried)
+//        } catch {
+//            print("error:  fetch error")
+//        }
+//    }
     func fetchSaveTextFromFirestore()  async throws {
         let docRef = firestore.collection("cities").document("BJ")
         do {
-            let dataLA = try await docRef.getDocument()
-            let id = dataLA.documentID
-            let data = dataLA.data()
-            let name = data?["name"] as? String ?? "名前なし"
-            let age = data?["age"] as? Int ?? 0
-            let favorite = data?["favorite"] as? [String] ?? ["nil っす"]
-            let isMarried = data?["isMarried"] as? Bool ?? false
-            fetchData = Person(name: name, age: age, favorite: favorite, isMarried: isMarried)
+            let documentData = try await docRef.getDocument(as: Person.self)
+            print("🟥",documentData.id)
+            fetchData = documentData
+//
+//            fetchData = try document.data(as: Person.self)
         } catch {
             print("error:  fetch error")
         }
     }
     
-    //⭐️コレクションに保存させる
-    func updataSubcollection() throws {
+    
+    //⭐️コレクションに保存させるj
+    func updataSubcollection()  {
         let docRef = firestore.collection("cities").document("BJ")
-        let sako = Person(name: "佐小田", age: 31, favorite: ["もも","レモン","スイカ"], isMarried: false)
+        let sako = Person(name: "佐小田", age: 31, favorite: ["もも","レモン"], isMarried: false)
         do {
             try docRef.setData(from: sako)
         } catch {
@@ -115,24 +143,23 @@ struct CloudFireStoreSampleView: View {
             }
         }
     }
-    
-    func uploadSample(str: String,str2: String){
-        var ref: DocumentReference?
-        ref = firestore.collection("users").addDocument(data: [
-            "first": str,
-            "middle": str2,
-            "last": "masa",
-            "born": 1994,
-        ]) { err in
-            if let err = err {
-                print("Error adding document: \(err)")
-            } else {
-                print("Document added with ID: \(ref!.documentID)")
-            }
+    //⭐️コレクションを指定。新しく一意のドキュメントを作成。（addNewCityDocも一緒）
+    func addNewPersonDoc(person: Person){
+        let correctionRef = firestore.collection("cities")
+        do {
+            try correctionRef.addDocument(from: person)
+        } catch {
+            print("error: addNewPersonDoc")
         }
     }
-    
-    
+    func addNewCityDoc(city: City){
+        let correctionRef = firestore.collection("cities")
+        do {
+//           try correctionRef.getDocument(as:City.self)
+        } catch {
+            print("error: addNewCityDoc")
+        }
+    }
     
 }
 

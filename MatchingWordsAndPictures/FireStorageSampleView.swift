@@ -46,7 +46,7 @@ struct FireStorageSampleView: View {
     var uid = Auth.auth().currentUser?.uid ?? ""
     
     func loadImage(){
-        let storage = Storage.storage().reference().child("images/uid")//🟥最後に/をつけて試してみる
+        let storage = Storage.storage().reference().child("images/uid")
         storage.listAll { result, error in
             guard let result = result else { return }
             if let error = error {
