@@ -7,7 +7,6 @@
 
 import Foundation
 import SwiftUI
-//MARK: -
 
 //UIViewControllerRepresentable : ViewControllerを作成・更新・破棄するためにそのメソッドを使用する。
 //SwiftUIビューと協調させたい場合、それらの相互作用を促進するためにコーディネーターのインスタンスを提供する必要がある。

@@ -4,49 +4,27 @@
 //
 //  Created by sako0602 on 2023/09/22.
 //
+//✅ドキュメント名をuidにする（クリア）
+
+//🟦.setData()データを上げる。コレクションやドキュメントのな名前を指定することが可能。
+//🟦.getDocument()ドキュメントの情報を引っ張ってくる。
+//🟦.addDocument()一意のドキュメントを作成
+
 
 import SwiftUI
 import Firebase
 import FirebaseStorage
 import FirebaseFirestore
 import FirebaseFirestoreSwift
-
-//struct Person: Codable {
-//
-//    let name: String
-//    let age: Int
-//    let favorite: [String]
-//    let isMarried: Bool
-//
-//    enum CodingKeys: String, CodingKey {
-//        case name
-//        case age
-//        case favorite
-//        case isMarried = "Married"
-//    }
-//}
-
-struct Person: Codable {
-    @DocumentID var id: String?
-    let name: String
-    let age: Int
-    let favorite: [String]
-    let isMarried: Bool
-}
-
-struct City: Codable{
-    @DocumentID var id: String?
-    var name: String
-    var population: Int
-    var specialProduct:[String]
-}
-
+import FirebaseAuth
+//import SDWebImageSwiftUI
 
 struct CloudFireStoreSampleView: View {
     
     @State private var inputText: String = ""
     @State private var saveText: String = ""
     @State var fetchData:Person
+    let uid = Auth.auth().currentUser?.uid
     
     let firestore = Firestore.firestore()
     let makoto = Person(name: "まこと", age: 32, favorite: ["酒","服"], isMarried: true)
@@ -61,7 +39,8 @@ struct CloudFireStoreSampleView: View {
                     .padding()
                     .textFieldStyle(.roundedBorder)
                 Button("保存"){
-                    addNewCityDoc(city: horyu)
+                    makeDocumet()
+//                    addNewCityDoc(city: horyu)//⭐️つこてる
 //                    addNewPersonDoc(person: makoto)
 //                    updataSubcollection()
 //                    sampleGetDocumet()
@@ -82,51 +61,45 @@ struct CloudFireStoreSampleView: View {
                 }
             }
         }
-        .task {
-            do {
-                try await fetchSaveTextFromFirestore()
-            } catch {
-                print("fetch error")
-            }
-        }
+//        .task {
+//            do {
+//                try await fetchSaveTextFromFirestore()
+//            } catch {
+//                print("fetch error")
+//            }
+//        }
     }
     
-    //⭐️フェッチ問題なし。コードは綺麗に書き直す。
-//    func fetchSaveTextFromFirestore()  async throws {
-//        let docRef = firestore.collection("cities").document("BJ")
-//        do {
-//            let dataLA = try await docRef.getDocument()
-////            let id = dataLA.documentID
-//            let data = dataLA.data()
-//            let name = data?["name"] as? String ?? "名前なし"
-//            let age = data?["age"] as? Int ?? 0
-//            let favorite = data?["favorite"] as? [String] ?? ["nil っす"]
-//            let isMarried = data?["isMarried"] as? Bool ?? false
-//            fetchData = Person(name: name, age: age, favorite: favorite, isMarried: isMarried)
-//        } catch {
-//            print("error:  fetch error")
-//        }
-//    }
+    //コレクションの中にドキュメントを作成し、その中へストレージの画像URLを保存させたい
+    func makeDocumet(){
+        guard let uid = uid else {
+            print("🟥: uid is nil")
+            return
+        }
+        //🟦 uid：q5KjudFHLUeNsraQ7wnYjQADEGI2
+        firestore.collection("user").document(uid).setData(["花":"紫陽花"])
+        
+    }
+    
+    //⭐️データをフェッチしてくる
     func fetchSaveTextFromFirestore()  async throws {
         let docRef = firestore.collection("cities").document("BJ")
         do {
             let documentData = try await docRef.getDocument(as: Person.self)
-            print("🟥",documentData.id)
             fetchData = documentData
-//
-//            fetchData = try document.data(as: Person.self)
         } catch {
             print("error:  fetch error")
         }
     }
     
     
-    //⭐️コレクションに保存させるj
+    //⭐️コレクションに保存させる
     func updataSubcollection()  {
         let docRef = firestore.collection("cities").document("BJ")
-        let sako = Person(name: "佐小田", age: 31, favorite: ["もも","レモン"], isMarried: false)
+        let sako = Person(name: "佐小田", age: 31, favorite: ["もも","りんご"], isMarried: false)
         do {
-            try docRef.setData(from: sako)
+            try docRef.setData(from: sako, merge: true)
+            
         } catch {
             print("upload miss")
         }
@@ -164,23 +137,8 @@ struct CloudFireStoreSampleView: View {
 }
 
 
-//func uploadImage(){
-//    let storageFB = Storage.storage().reference(forURL: "gs://independentactivitysampleapp.appspot.com/")//.child("Item")
-//
-//    let image = UIImage(named: "sakoda.jpg")
-//
-//    let data = image!.jpegData(compressionQuality: 1.0)!
-//
-//    storageFB.putData(data as Data, metadata: nil) { (data, error) in
-//        if error != nil {
-//            return
-//        }
-//
-//    }
-//}
-
 struct CloudFireStoreSampleView_Previews: PreviewProvider {
     static var previews: some View {
-        CloudFireStoreSampleView(fetchData: Person(name: "あ", age: 100, favorite: ["侍"], isMarried: false))
+        CloudFireStoreSampleView(fetchData: Person(name: "すずき", age: 100, favorite: ["りんご","もも","オレンジ"], isMarried: false))
     }
 }

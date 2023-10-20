@@ -11,33 +11,8 @@ import FirebaseFirestore
 import FirebaseStorage
 import Firebase
 
-struct userInfo: Identifiable, Codable{
-    var id = UUID().uuidString
-    let role: String
-}
-
-struct FirebaseImageView: View  {
-    @State private var image: UIImage?
-    let imageUrl: URL
-    var body: some View {
-        Image(uiImage: image ?? UIImage())
-            .resizable()
-            .onAppear(perform: loadImage)
-    }
-    
-    func loadImage(){
-        URLSession.shared.dataTask(with: imageUrl) { data, _, _ in
-            if let data = data, let image = UIImage(data: data) {
-                DispatchQueue.main.async {
-                    self.image = image
-                }
-            }
-        }.resume()
-    }
-}
 
 struct FireStorageSampleView: View {
-    
     @State private var userRole = "" //UIDになる
     @State private var image:UIImage? //= UIImage(named: "sakoda")
     @State private var sampleMan:UIImage? = UIImage(named: "sampleMan")
@@ -245,7 +220,27 @@ struct FireStorageSampleView: View {
             }
         }
     }
+}
+
+//MARK: - RowView
+struct FirebaseImageView: View  {
+    @State private var image: UIImage?
+    let imageUrl: URL
+    var body: some View {
+        Image(uiImage: image ?? UIImage())
+            .resizable()
+            .onAppear(perform: loadImage)
+    }
     
+    func loadImage(){
+        URLSession.shared.dataTask(with: imageUrl) { data, _, _ in
+            if let data = data, let image = UIImage(data: data) {
+                DispatchQueue.main.async {
+                    self.image = image
+                }
+            }
+        }.resume()
+    }
 }
 
 struct FireStorageSampleView_Previews: PreviewProvider {

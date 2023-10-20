@@ -3,45 +3,47 @@
 //  MatchingWordsAndPictures
 //
 //  Created by sako0602 on 2023/10/10.
-//
+// 🟥Keyとなる画面🟥
 
 import SwiftUI
 import FirebaseFirestore
 import FirebaseStorage
+import FirebaseFirestoreSwift
+import FirebaseAuth
+
+struct PersonData: Codable{
+    @DocumentID var id: String?
+    let name: String
+    let imageString: String
+}
 
 struct UploadSampleView: View {
     
-    @State var name = "さこだ　ひろみち"
-    @State var imageName = UIImage(named: "atsuko")
+    let sakoda = PersonData(name: "さこだ　ひろみち", imageString: "sakoda")
+    let uid = Auth.auth().currentUser?.uid
     
     var body: some View {
         VStack{
             Spacer()
             HStack{
                 Spacer()
-                if let imageName = imageName {
-                    Image(uiImage: imageName)
-                        .resizable()
-                        .scaledToFit()
-                        .frame(width: 350)
-                }
+                Image(sakoda.imageString)
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 350)
                 Spacer()
-//                TextField("入力してください", text: $name)
-//                    .textFieldStyle(.roundedBorder)
-                Text(name)
+                Text(sakoda.name)
                 Spacer()
             }
             Spacer()
             Button(action: {
-                print("jjj")
                 Task{
                     do {
-                         try await uploadFirebase()
+                        try await uploadFirebase()
                     } catch {
                         
                     }
                 }
-                print("kkk")
             }, label: {
                 Text("Up Firebase")
                     .frame(width: 250, height: 100)
@@ -51,31 +53,33 @@ struct UploadSampleView: View {
             Spacer()
         }
     }
-    //TODO: かなり無駄が多いように思えるので、後ほど改善
+    
     func uploadFirebase() async throws {
-        //MARK: Dataへ変換する
-        guard let imageName = imageName?.jpegData(compressionQuality: 0.8) else {
-            print("🟥no imageName")
+        let uiImage = UIImage(named: sakoda.imageString)
+        
+        guard let imageName = uiImage?.jpegData(compressionQuality: 0.8) else {
+            print("🐦‍⬛no imageName")
             return
         }
-        //MARK: リファレンスを作成
+        
+        //ストレージのデータベースのリファレンス。uidはそれぞれのユーザーのuidを使って作る
+        let storageRef = Storage.storage().reference().child("🟥🟥🟥")
+        //ファイヤーストアのデータベースのリファレンスを作る。
         let db = Firestore.firestore().collection("users").document("sampleDocument")
-        let storageRef = Storage.storage().reference().child("images/uid")
         do {
-            //MARK: データを指定したポイントへアップロード
-            let _ = try await storageRef.putData(imageName)
-            //MARK: StorageのURLをダウンロード
+            //ストレージへデータ型（imageName）になった写真を送信する。URLを取得するため。
+            storageRef.putData(imageName)
+            //ストレージから画像のURLを取得してくる
             let url = try await storageRef.downloadURL()
-            //MARK: ダウンロードしてきたURLへ保存するために辞書型にする。
-            let nameAndImageURL:[String: Any] = [
-                "name": name,
-                "imageURL": url.absoluteString
-            ]
-            //MARK: 
-            try await db.setData(nameAndImageURL)
+            
+            //urlをString型にするためにaboluteStringを使用する。
+            let urlString = url.absoluteString
+            
+            let person = PersonData(name: sakoda.name, imageString: urlString)
+            try db.setData(from: sakoda)
             print("🟢 Upload successful!")
         } catch {
-            print("🟥valid URL")
+            print("valid URL")
         }
     }
 }
