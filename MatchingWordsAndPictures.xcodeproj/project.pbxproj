@@ -40,6 +40,7 @@
 		69FF2A8E2ADA889100498576 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 69FF2A8D2ADA889100498576 /* GoogleService-Info.plist */; };
 		69FF2A902ADFE31900498576 /* ClooudFireStoreSmapleModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69FF2A8F2ADFE31900498576 /* ClooudFireStoreSmapleModel.swift */; };
 		69FF2A922ADFE42700498576 /* FireStorageSampleModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69FF2A912ADFE42700498576 /* FireStorageSampleModel.swift */; };
+		69FF2A962AE2948400498576 /* DownloadSmapleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69FF2A952AE2948300498576 /* DownloadSmapleView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -93,6 +94,7 @@
 		69FF2A8D2ADA889100498576 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		69FF2A8F2ADFE31900498576 /* ClooudFireStoreSmapleModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClooudFireStoreSmapleModel.swift; sourceTree = "<group>"; };
 		69FF2A912ADFE42700498576 /* FireStorageSampleModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FireStorageSampleModel.swift; sourceTree = "<group>"; };
+		69FF2A952AE2948300498576 /* DownloadSmapleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadSmapleView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -204,6 +206,7 @@
 				69FF2A932AE282B300498576 /* Firestore */,
 				69FF2A942AE282C600498576 /* storage */,
 				69FF2A862AD56F1C00498576 /* UploadSampleView.swift */,
+				69FF2A952AE2948300498576 /* DownloadSmapleView.swift */,
 				690B75942ABEB983006E6882 /* FirebaseManager.swift */,
 				69FF2A4D2AC46BE700498576 /* FirebaseStorageManager.swift */,
 				690B758D2ABE9E7A006E6882 /* View */,
@@ -447,6 +450,7 @@
 				69FF2A902ADFE31900498576 /* ClooudFireStoreSmapleModel.swift in Sources */,
 				697B6F362ABD5D4A00FA6803 /* AuthenticationViewModel.swift in Sources */,
 				69D545F42AA8974100D2A6E9 /* ImageTextRegisterView.swift in Sources */,
+				69FF2A962AE2948400498576 /* DownloadSmapleView.swift in Sources */,
 				697B6F292ABD569100FA6803 /* LoginView.swift in Sources */,
 				697B6F312ABD5CE800FA6803 /* SignUpView.swift in Sources */,
 				69BD0C432A610A0600DD7041 /* ContentView.swift in Sources */,

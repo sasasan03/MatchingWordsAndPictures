@@ -4,6 +4,8 @@
 //
 //  Created by sako0602 on 2023/10/10.
 // 🟥Keyとなる画面🟥
+//☑️ Firestoreのuidドキュメントへ画像のURLを保存する
+//☑️ Storageリファレンスの一つ下位のuidディレクトリ（フォルダ）に画像を保存する
 
 import SwiftUI
 import FirebaseFirestore
@@ -61,22 +63,25 @@ struct UploadSampleView: View {
             print("🐦‍⬛no imageName")
             return
         }
+        guard let uid = uid else {
+            print("🟥： uid is nil")
+            return
+        }
         
         //ストレージのデータベースのリファレンス。uidはそれぞれのユーザーのuidを使って作る
-        let storageRef = Storage.storage().reference().child("🟥🟥🟥")
+        let storageRef = Storage.storage().reference().child("\(uid)/\(imageName)")
         //ファイヤーストアのデータベースのリファレンスを作る。
-        let db = Firestore.firestore().collection("users").document("sampleDocument")
+        let db = Firestore.firestore().collection("user").document(uid)
         do {
             //ストレージへデータ型（imageName）になった写真を送信する。URLを取得するため。
             storageRef.putData(imageName)
             //ストレージから画像のURLを取得してくる
             let url = try await storageRef.downloadURL()
-            
+
             //urlをString型にするためにaboluteStringを使用する。
             let urlString = url.absoluteString
-            
             let person = PersonData(name: sakoda.name, imageString: urlString)
-            try db.setData(from: sakoda)
+            try db.setData(from: person)
             print("🟢 Upload successful!")
         } catch {
             print("valid URL")

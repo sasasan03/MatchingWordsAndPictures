@@ -4,6 +4,9 @@
 //
 //  Created by sako0602 on 2023/09/24.
 //
+//🟦.listAll()
+//🟦.getMetadata()
+//🟦.putData()
 
 import SwiftUI
 import FirebaseCore
