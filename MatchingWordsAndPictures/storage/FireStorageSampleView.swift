@@ -90,6 +90,7 @@ struct FireStorageSampleView: View {
         }
         .task {
             do {
+                try await fetchUserRole()
 //                try await images = fetchImage(at: "someDirectory/uid")
             } catch {
                 print("on")
@@ -98,10 +99,8 @@ struct FireStorageSampleView: View {
         }
     }
 
-    //MARK: - ここだけなぜFirestoreを参照しているのかがわからない
+    //MARK: - 🟦ストレージとデータベースを使用
     func fetchUserRole() async throws {
-        let storageRef = Storage.storage().reference()
-        let imageRef = storageRef.child("someDirectory/sampleMan.jpg")
         let db = Firestore.firestore().collection("users").document(uid)
         do {
             let document = try await db.getDocument()
@@ -112,7 +111,7 @@ struct FireStorageSampleView: View {
                 print("🍔 fetch error ")
             }
         }
-    //MARK: -
+    //MARK: - ストレージのみ使用
     func listSample(pageToken: String? = nil){
         let storageRef = Storage.storage().reference()
         let childRef = storageRef.child("images")
@@ -133,7 +132,7 @@ struct FireStorageSampleView: View {
             childRef.list(maxResults: 1, completion: pageHandler)
         }
     }
-    //MARK: -
+    //MARK: - ストレージのみを使用
     func fetchImage(at path: String) {
         let storageRef = Storage.storage().reference()
         let imageRef = storageRef.child(path)

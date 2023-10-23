@@ -7,6 +7,9 @@
 //☑️ Firestoreのuidドキュメントへ画像のURLを保存する
 //☑️ Storageリファレンスの一つ下位のuidディレクトリ（フォルダ）に画像を保存する
 
+//uidフォルダを作成し、画像のデータをアップロードする
+//
+
 import SwiftUI
 import FirebaseFirestore
 import FirebaseStorage
@@ -80,6 +83,7 @@ struct UploadSampleView: View {
 
             //urlをString型にするためにaboluteStringを使用する。
             let urlString = url.absoluteString
+
             let person = PersonData(name: sakoda.name, imageString: urlString)
             try db.setData(from: person)
             print("🟢 Upload successful!")
