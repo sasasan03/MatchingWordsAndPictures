@@ -6,17 +6,18 @@
 //☑️ firestoreから画像をダウンロードしてくる
 //
 
-import SwiftUI
-import FirebaseFirestore
-import FirebaseStorage
-import FirebaseFirestoreSwift
-import FirebaseAuth
-
 //struct PersonData: Codable{
 //    @DocumentID var id: String?
 //    let name: String
 //    let imageString: String
 //}
+
+
+import SwiftUI
+import FirebaseFirestore
+import FirebaseStorage
+import FirebaseFirestoreSwift
+import FirebaseAuth
 
 struct DownloadSmapleView: View {
     
@@ -28,13 +29,6 @@ struct DownloadSmapleView: View {
     var body: some View {
         VStack{
             HStack{
-//                AsyncImage(url:URL(string: fetchData.imageString)) { image in
-//                    let _ = print("🟢",image)
-//                    image.image?
-//                        .resizable()
-//                        .scaledToFit()
-//                        .frame(width: 400, height: 300)
-//                }
                 AsyncImage(url: imageURL) { image in
                     image
                 }placeholder: {
@@ -63,16 +57,16 @@ struct DownloadSmapleView: View {
         
         do {
             let documentData =  try await db.getDocument()
-//            let documentData = try await db.getDocument(as: PersonData.self)
-            print("###1")
+            
             let data = try documentData.data(as: PersonData.self)
-//            let imageURL = try await storage.downloadURL()
-            print("###2")
+            
             fetchData = data
-//            fetchData = documentData
-            print("###3")
-            imageURL = URL(string: fetchData.imageString)!
-            print("🟢 download successful!")
+            
+            imageURL = URL(string: fetchData.imageString)
+            
+            guard let imageURL = imageURL else { return print("### imageURL") }
+            
+            print("🟢 download successful!",imageURL)
         } catch {
             print("valid URL")
         }
