@@ -28,11 +28,8 @@ struct MatchingWordsAndPicturesApp: App {
     
     var body: some Scene {
         WindowGroup {
-//            FireStorageSampleView()
-        
-            DownloadSmapleView(imageURL: URL(string: "aaa")!, fetchData: PersonData(name: "田中", imageString: "tanaka"))
-//            UploadSampleView()//⭐️Storageの実験で使用
-//            CloudFireStoreSampleView(fetchData: Person(name: "さ", age: 24, favorite: ["もも"], isMarried: false))//⭐️CloudFirestoreの実験で使用
+            DownloadSmapleView()//⭐️StorageとCloudFirestoreを使用
+//            UploadSampleView()//⭐️StorageとCloudFirestoreを使用
         }
     }
 }

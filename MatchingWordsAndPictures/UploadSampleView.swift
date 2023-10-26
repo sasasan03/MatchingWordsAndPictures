@@ -24,7 +24,7 @@ struct PersonData: Codable{
 
 struct UploadSampleView: View {
     
-    let sakoda = PersonData(name: "さこだ　ひろみち", imageString: "sakoda")
+    let sako = PersonData(name: "さこ みち", imageString: "sako")
     let uid = Auth.auth().currentUser?.uid
     
     var body: some View {
@@ -32,12 +32,12 @@ struct UploadSampleView: View {
             Spacer()
             HStack{
                 Spacer()
-                Image(sakoda.imageString)
+                Image(sako.imageString)
                     .resizable()
                     .scaledToFit()
                     .frame(width: 350)
                 Spacer()
-                Text(sakoda.name)
+                Text(sako.name)
                 Spacer()
             }
             Spacer()
@@ -60,7 +60,7 @@ struct UploadSampleView: View {
     }
     
     func uploadFirebase() async throws {
-        let uiImage = UIImage(named: sakoda.imageString)
+        let uiImage = UIImage(named: sako.imageString)
         
         guard let imageName = uiImage?.jpegData(compressionQuality: 0.8) else {
             print("🐦‍⬛no imageName")
@@ -84,7 +84,7 @@ struct UploadSampleView: View {
             //urlをString型にするためにaboluteStringを使用する。
             let urlString = url.absoluteString
 
-            let person = PersonData(name: sakoda.name, imageString: urlString)
+            let person = PersonData(name: sako.name, imageString: urlString)
             try db.setData(from: person)
             print("🟢 Upload successful!")
         } catch {

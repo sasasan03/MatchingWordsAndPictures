@@ -24,18 +24,27 @@ struct DownloadSmapleView: View {
     let uid = Auth.auth().currentUser?.uid
     
     @State var imageURL: URL?
-    @State var fetchData: PersonData
+    @State var fetchData: PersonData?
     
     var body: some View {
         VStack{
             HStack{
+                Spacer()
                 AsyncImage(url: imageURL) { image in
                     image
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 300)
                 }placeholder: {
                     ProgressView()
                 }
-                .frame(width: 300, height: 200 )
-                Text(fetchData.name)
+                Spacer()
+                if let fetchData = fetchData {
+                    Text(fetchData.name)
+                } else {
+                    Text("downloading name")
+                }
+                Spacer()
             }
         }
         .task {
@@ -46,45 +55,33 @@ struct DownloadSmapleView: View {
             }
         }
     }
-    
+
     func fetchData() async throws{
         guard let uid = uid else {
             print("🟥：uid is nil")
             return
         }
-        
         let db = Firestore.firestore().collection("user").document(uid)
-        
         do {
             let documentData =  try await db.getDocument()
-            
             let data = try documentData.data(as: PersonData.self)
-            
             fetchData = data
-            
+            guard let fetchData = fetchData else { return print("### personData is nil")}
             imageURL = URL(string: fetchData.imageString)
-            
-            guard let imageURL = imageURL else { return print("### imageURL") }
-            
-            print("🟢 download successful!",imageURL)
+            guard let imageURL = imageURL else { return print("### invaild imageURL") }
+            print("🟢 download successful",imageURL)
         } catch {
-            print("valid URL")
+            print("???? error")
         }
     }
-}
 
+}
 
 
 struct DownloadSmapleView_Previews: PreviewProvider {
     
-    func imageURL() -> URL{
-        let url = URL(string: "sasasa")
-        guard let url = url else { return URL(string: "")! }
-        return url
-    }
-    
     static var previews: some View {
-        DownloadSmapleView(imageURL: URL(string: "uid")!, fetchData: PersonData(name: "データを取得しています", imageString: "suzuki"))
+        DownloadSmapleView()
         
     }
 }
