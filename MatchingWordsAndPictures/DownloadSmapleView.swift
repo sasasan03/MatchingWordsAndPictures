@@ -10,7 +10,6 @@
 //    let imageString: String
 //}
 
-
 import SwiftUI
 import FirebaseFirestore
 import FirebaseStorage
@@ -24,29 +23,9 @@ struct DownloadSmapleView: View {
     @State var testUID: String?
     
     var body: some View {
-        List(fetchDatas ?? [PersonData(name: "no image", imageString: "noimage")], id: \.name){ fetchData in
+        List(fetchDatas ?? [PersonData(name: "no name", imageString: "")], id: \.id){ fetchData in
             downloadRowView(fetchData: fetchData)
         }
-//        VStack{
-//            HStack{
-//                Spacer()
-//                AsyncImage(url: imageURL) { image in
-//                    image
-//                        .resizable()
-//                        .scaledToFit()
-//                        .frame(width: 300)
-//                }placeholder: {
-//                    ProgressView()
-//                }
-//                Spacer()
-//                if let fetchData = fetchData {
-//                    Text(fetchData.name)
-//                } else {
-//                    Text("downloading name")
-//                }
-//                Spacer()
-//            }
-//        }
         .task {
             do {
                 try await fetchData()
@@ -55,27 +34,20 @@ struct DownloadSmapleView: View {
             }
         }
     }
-
+    
+    //⭐️コレクションのクエリについて調べる
     func fetchData() async throws {
         guard let uid = uid else {
             print("🟥：uid is nil")
             return
         }
-        
-        let db = Firestore.firestore().collection("user").document(uid)
-        
+        let collectionRef = Firestore.firestore().collection("user").document(uid).collection("persons")
         do {
-            var documentDatas =  try await db.getDocument()
-//            for documentData in documentDatas {
-//                print("🍔：",documentData.data())
-//                let data = try documentData.data(as: [PersonData].self)
-//                fetchDatas?.append(data)
-//            }
-            
-//            guard let fetchDatas = fetchDatas else { return print("#### no data") }
-//            for fetchData in fetchDatas {
-//                
-//            }
+            let querySnapshot = try await collectionRef.getDocuments()
+            let personData = try querySnapshot.documents.map({ document in
+                try document.data(as: PersonData.self)
+            })
+            fetchDatas = personData
             print("🟢 download successful")
         } catch {
             print("???? error")
@@ -90,18 +62,16 @@ struct downloadRowView: View{
     
     var body: some View {
         HStack{
-            Spacer()
             AsyncImage(url: URL(string: fetchData.imageString)) { image in
                 image
                     .resizable()
                     .scaledToFit()
-                    .frame(width: 300)
+                    .frame(width: 200)
             }placeholder: {
                 ProgressView()
             }
-            Spacer()
+            .padding()
             Text(fetchData.name)
-            Spacer()
         }
     }
 }

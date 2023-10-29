@@ -13,8 +13,7 @@ import FirebaseAuth
 
 
 struct PersonData: Identifiable,Codable{
-//    var uuid = UUID()//🟥uuidを付与
-    @DocumentID var id: String?
+    var id = UUID()
     let name: String
     let imageString: String
 }
@@ -22,9 +21,9 @@ struct PersonData: Identifiable,Codable{
 struct UploadSampleView: View {
 
     let personArraay = [
-        PersonData(name: "さこ", imageString: "sako"),
+        PersonData(name: "sakoda", imageString: "sako"),
         PersonData(name: "ランプ", imageString: "lamp"),
-        PersonData(name: "空", imageString: "sky")
+        PersonData(name: "標識", imageString: "sky")
     ]
     let uid = Auth.auth().currentUser?.uid
     
@@ -32,7 +31,7 @@ struct UploadSampleView: View {
         VStack{
             Spacer()
             //TODO: ID設定の仕方を見直す。
-            List(personArraay, id: \.name){ person in
+            List(personArraay, id: \.id){ person in
                 updateRowView(
                     image: person.imageString,
                     name: person.name
@@ -41,11 +40,7 @@ struct UploadSampleView: View {
             Spacer()
             Button(action: {
                 Task{
-                    do {
-                        try await uploadFirebase(datas: personArraay)
-                    } catch {
-                        
-                    }
+                   try await uploadFirebase(datas: personArraay)
                 }
             }, label: {
                 Text("Up Firebase")
@@ -60,37 +55,33 @@ struct UploadSampleView: View {
     func uploadFirebase(datas: [PersonData]) async throws {
         
         guard let uid = uid else {
-            print("🟥： uid is nil")
-            return
+            throw FirebaseError.uidError
         }
         
         for data in datas {
             guard let uiImage = UIImage(named: data.imageString),
                   let imageName = uiImage.jpegData(compressionQuality: 0.8) else {
-                print("🟥: no imageName")
-                return
+                throw FirebaseError.getImageError
             }
-            //リファレンス。uidはそれぞれのユーザーのuidを使って作る。
+            //Firebase Storageのリファレンス
             let storageRef = Storage.storage().reference().child("users/\(uid)/\(imageName)")
-            //ファイヤーストアのデータベースのリファレンスを作る。
             do {
-                //ストレージへデータ型（imageName）になった写真を送信する。URLを取得するため。
+                //ストレージへ画像情報をアップロード
                 storageRef.putData(imageName)
-                //ストレージから画像のURLを取得してくる
+                //ストレージから画像のURLを取得する
                 let url = try await storageRef.downloadURL()
-                //urlをString型にするためにaboluteStringを使用する。
+                //urlをString型に変更
                 let urlString = url.absoluteString
-                
-                //Firebaseに保存する
+                //Firebaseに保存する。
                 let person = PersonData(name: data.name, imageString: urlString)
+                //Firebase
                 let db = Firestore.firestore().collection("user").document(uid).collection("persons")
-                try db.document("\(person.name)").setData(from: person, merge: true)
-                print("🟢：Upload successful!")
+                try db.document("\(person.name)").setData(from: person)
+                print("🟢 Upload successful!")
             } catch {
-                print("🟥：error")
+                throw FirebaseError.uploadError
             }
         }
-        
     }
 }
 
@@ -114,3 +105,4 @@ struct UploadSampleView_Previews: PreviewProvider {
         UploadSampleView()
     }
 }
+ 
