@@ -32,7 +32,7 @@ struct ImageTextRegisterView: View {
                         }
                         
                         NavigationLink("問題に挑戦する") {
-                            MatingView()
+//                            MatingView()
                         }
                         .foregroundColor(.white)
                     }

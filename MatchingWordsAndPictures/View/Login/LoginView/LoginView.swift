@@ -50,15 +50,6 @@ struct LoginView: View {
     
     @AppStorage("uid") var userID = ""
     
-//    private func signIn() async throws{
-//        do {
-//            try await Auth.auth().signIn(withEmail: email, password: password)
-//        }
-//        catch {
-//            print(error)
-//        }
-//    }
-    
     @Binding var currentShowingView: AuthState
     @State var email = ""
     @State var password = ""

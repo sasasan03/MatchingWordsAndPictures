@@ -44,7 +44,7 @@ struct ImageTextRegisterRowView: View {
                         .textFieldStyle(.roundedBorder)
                         .frame(width: geometry.size.width * 0.5)
                     Button("保存"){
-                        peristImageStorage(uiImage: uiImage)
+//                        peristImageStorage(uiImage: uiImage)
                     }
                     Text(loginStateMessage)
                 }
@@ -57,31 +57,31 @@ struct ImageTextRegisterRowView: View {
         }
     }
     
-    private func peristImageStorage(uiImage: UIImage?){
-        print("🟥", FirebaseManager.shared.auth.currentUser?.uid ?? "uidないよ〜〜")
-        guard let uid = FirebaseManager.shared.auth.currentUser?.uid else { return }
-        let ref = FirebaseManager.shared.storage.reference(withPath: uid)
-        print("🟦")
-        guard let imageData = self.uiImage?.jpegData(compressionQuality: 0.5) else { return }
-        print("🟢",imageData)
-        ref.putData(imageData, metadata: nil) { metaData, err in
-            print("🟨")
-            if let err = err {
-                loginStateMessage = "Failed to push image to Storage: \(err)"
-                print("🍟",err)
-                return
-            }
-            print("🟣")
-            ref.downloadURL { url, err in
-                if let err {
-                    loginStateMessage = "Failed to retrieve downloadURL: \(err)"
-                    return
-                }
-                print("🟤")
-                loginStateMessage = "Successfully stored image with url: \(url?.absoluteString ?? "もものすけ")"
-            }
-        }
-    }
+//    private func peristImageStorage(uiImage: UIImage?){
+//        print("🟥", FirebaseManager.shared.auth.currentUser?.uid ?? "uidないよ〜〜")
+//        guard let uid = FirebaseManager.shared.auth.currentUser?.uid else { return }
+//        let ref = FirebaseManager.shared.storage.reference(withPath: uid)
+//        print("🟦")
+//        guard let imageData = self.uiImage?.jpegData(compressionQuality: 0.5) else { return }
+//        print("🟢",imageData)
+//        ref.putData(imageData, metadata: nil) { metaData, err in
+//            print("🟨")
+//            if let err = err {
+//                loginStateMessage = "Failed to push image to Storage: \(err)"
+//                print("🍟",err)
+//                return
+//            }
+//            print("🟣")
+//            ref.downloadURL { url, err in
+//                if let err {
+//                    loginStateMessage = "Failed to retrieve downloadURL: \(err)"
+//                    return
+//                }
+//                print("🟤")
+//                loginStateMessage = "Successfully stored image with url: \(url?.absoluteString ?? "もものすけ")"
+//            }
+//        }
+//    }
     
 }
 

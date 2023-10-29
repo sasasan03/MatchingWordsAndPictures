@@ -29,15 +29,6 @@ enum LoginError: LocalizedError {
 
 struct SignUpView: View {
     
-//    @EnvironmentObject var viewModel: AuthenticationViewModel
-    
-//    func signUp() {
-//        Task {
-//            await viewModel.signUpWithEmailpassword()
-//        }
-//    }
-    
-    
     @Binding var currentShowingView: AuthState
     @AppStorage("uid") var userID = ""
     @State private var mail = ""

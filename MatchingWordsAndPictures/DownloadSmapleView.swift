@@ -3,8 +3,6 @@
 //  MatchingWordsAndPictures
 //
 //  Created by sako0602 on 2023/10/20.
-//☑️ firestoreから画像をダウンロードしてくる
-//
 
 //struct PersonData: Codable{
 //    @DocumentID var id: String?
@@ -22,31 +20,33 @@ import FirebaseAuth
 struct DownloadSmapleView: View {
     
     let uid = Auth.auth().currentUser?.uid
-    
-    @State var imageURL: URL?
-    @State var fetchData: PersonData?
+    @State var fetchDatas: [PersonData]?
+    @State var testUID: String?
     
     var body: some View {
-        VStack{
-            HStack{
-                Spacer()
-                AsyncImage(url: imageURL) { image in
-                    image
-                        .resizable()
-                        .scaledToFit()
-                        .frame(width: 300)
-                }placeholder: {
-                    ProgressView()
-                }
-                Spacer()
-                if let fetchData = fetchData {
-                    Text(fetchData.name)
-                } else {
-                    Text("downloading name")
-                }
-                Spacer()
-            }
+        List(fetchDatas ?? [PersonData(name: "no image", imageString: "noimage")], id: \.name){ fetchData in
+            downloadRowView(fetchData: fetchData)
         }
+//        VStack{
+//            HStack{
+//                Spacer()
+//                AsyncImage(url: imageURL) { image in
+//                    image
+//                        .resizable()
+//                        .scaledToFit()
+//                        .frame(width: 300)
+//                }placeholder: {
+//                    ProgressView()
+//                }
+//                Spacer()
+//                if let fetchData = fetchData {
+//                    Text(fetchData.name)
+//                } else {
+//                    Text("downloading name")
+//                }
+//                Spacer()
+//            }
+//        }
         .task {
             do {
                 try await fetchData()
@@ -56,20 +56,27 @@ struct DownloadSmapleView: View {
         }
     }
 
-    func fetchData() async throws{
+    func fetchData() async throws {
         guard let uid = uid else {
             print("🟥：uid is nil")
             return
         }
+        
         let db = Firestore.firestore().collection("user").document(uid)
+        
         do {
-            let documentData =  try await db.getDocument()
-            let data = try documentData.data(as: PersonData.self)
-            fetchData = data
-            guard let fetchData = fetchData else { return print("### personData is nil")}
-            imageURL = URL(string: fetchData.imageString)
-            guard let imageURL = imageURL else { return print("### invaild imageURL") }
-            print("🟢 download successful",imageURL)
+            var documentDatas =  try await db.getDocument()
+//            for documentData in documentDatas {
+//                print("🍔：",documentData.data())
+//                let data = try documentData.data(as: [PersonData].self)
+//                fetchDatas?.append(data)
+//            }
+            
+//            guard let fetchDatas = fetchDatas else { return print("#### no data") }
+//            for fetchData in fetchDatas {
+//                
+//            }
+            print("🟢 download successful")
         } catch {
             print("???? error")
         }
@@ -77,6 +84,27 @@ struct DownloadSmapleView: View {
 
 }
 
+struct downloadRowView: View{
+    
+    let fetchData: PersonData
+    
+    var body: some View {
+        HStack{
+            Spacer()
+            AsyncImage(url: URL(string: fetchData.imageString)) { image in
+                image
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 300)
+            }placeholder: {
+                ProgressView()
+            }
+            Spacer()
+            Text(fetchData.name)
+            Spacer()
+        }
+    }
+}
 
 struct DownloadSmapleView_Previews: PreviewProvider {
     
