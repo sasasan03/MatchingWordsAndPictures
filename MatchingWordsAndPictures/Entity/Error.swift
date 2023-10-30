@@ -10,7 +10,7 @@ import Foundation
 enum FirebaseError: Error {
     case uploadError
     case downloadError
-    case uidError
+    case uidFetchError
     case getImageError
     var errorType: String {
         switch self {
@@ -18,7 +18,7 @@ enum FirebaseError: Error {
             return "アップロードできませんでした"
         case .downloadError:
             return "ダウンロードできませんでした"
-        case .uidError:
+        case .uidFetchError:
             return "uidを取得できませんでした"
         case .getImageError:
             return "画像の取得に失敗"

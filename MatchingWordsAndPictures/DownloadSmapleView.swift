@@ -19,16 +19,16 @@ import FirebaseAuth
 struct DownloadSmapleView: View {
     
     let uid = Auth.auth().currentUser?.uid
-    @State var fetchDatas: [PersonData]?
+    @State var personDatas: [PersonData]?
     @State var testUID: String?
     
     var body: some View {
-        List(fetchDatas ?? [PersonData(name: "no name", imageString: "")], id: \.id){ fetchData in
+        List(personDatas ?? [PersonData(name: "no name", imageString: "")], id: \.id){ fetchData in
             downloadRowView(fetchData: fetchData)
         }
         .task {
             do {
-                try await fetchData()
+                try await personDatas = fetchPersonData()
             } catch {
                 print("🟥：fetch error")
             }
@@ -36,22 +36,18 @@ struct DownloadSmapleView: View {
     }
     
     //⭐️コレクションのクエリについて調べる
-    func fetchData() async throws {
+    func fetchPersonData() async throws -> [PersonData] {
         guard let uid = uid else {
             print("🟥：uid is nil")
-            return
+            throw FirebaseError.uidFetchError
         }
         let collectionRef = Firestore.firestore().collection("user").document(uid).collection("persons")
-        do {
-            let querySnapshot = try await collectionRef.getDocuments()
-            let personData = try querySnapshot.documents.map({ document in
-                try document.data(as: PersonData.self)
-            })
-            fetchDatas = personData
-            print("🟢 download successful")
-        } catch {
-            print("???? error")
-        }
+        let querySnapshot = try await collectionRef.getDocuments()
+        let personDatas = try querySnapshot.documents.map({ document in
+            try document.data(as: PersonData.self)
+        })
+        print("🟢 download successful")
+        return personDatas
     }
 
 }

@@ -40,7 +40,11 @@ struct UploadSampleView: View {
             Spacer()
             Button(action: {
                 Task{
-                   try await uploadFirebase(datas: personArraay)
+                    do {
+                        try await uploadFirebase(datas: personArraay)
+                    } catch {
+                        FirebaseError.uploadError
+                    }
                 }
             }, label: {
                 Text("Up Firebase")
@@ -52,12 +56,12 @@ struct UploadSampleView: View {
         }
     }
     
-    func uploadFirebase(datas: [PersonData]) async throws {
+    func uploadFirebase(datas: [PersonData]) async throws  {
         
         guard let uid = uid else {
-            throw FirebaseError.uidError
+            throw FirebaseError.uidFetchError
         }
-        
+
         for data in datas {
             guard let uiImage = UIImage(named: data.imageString),
                   let imageName = uiImage.jpegData(compressionQuality: 0.8) else {
@@ -65,22 +69,19 @@ struct UploadSampleView: View {
             }
             //Firebase Storageのリファレンス
             let storageRef = Storage.storage().reference().child("users/\(uid)/\(imageName)")
-            do {
-                //ストレージへ画像情報をアップロード
-                storageRef.putData(imageName)
-                //ストレージから画像のURLを取得する
-                let url = try await storageRef.downloadURL()
-                //urlをString型に変更
-                let urlString = url.absoluteString
-                //Firebaseに保存する。
-                let person = PersonData(name: data.name, imageString: urlString)
-                //Firebase
-                let db = Firestore.firestore().collection("user").document(uid).collection("persons")
-                try db.document("\(person.name)").setData(from: person)
-                print("🟢 Upload successful!")
-            } catch {
-                throw FirebaseError.uploadError
-            }
+            //ストレージへ画像情報をアップロード
+            storageRef.putData(imageName)
+            //ストレージから画像のURLを取得する
+            let url = try await storageRef.downloadURL()
+            //urlをString型に変更
+            let urlString = url.absoluteString
+            //Firebaseに保存する。
+            let person = PersonData(name: data.name, imageString: urlString)
+            //Firestoreのリファレンスを作成
+            let db = Firestore.firestore().collection("user").document(uid).collection("persons")
+            //Firestoreへ保存する
+            try db.document("\(person.name)").setData(from: person)
+            print("🟢 Upload successful!")
         }
     }
 }
