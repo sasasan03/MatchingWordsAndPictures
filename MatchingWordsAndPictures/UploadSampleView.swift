@@ -11,7 +11,6 @@ import FirebaseStorage
 import FirebaseFirestoreSwift
 import FirebaseAuth
 
-
 struct PersonData: Identifiable,Codable{
     var id = UUID()
     let name: String
@@ -26,6 +25,8 @@ struct UploadSampleView: View {
         PersonData(name: "標識", imageString: "sky")
     ]
     let uid = Auth.auth().currentUser?.uid
+    @State var firebaseError:FirebaseError? = nil
+    @State var isError = false
     
     var body: some View {
         VStack{
@@ -37,13 +38,18 @@ struct UploadSampleView: View {
                     name: person.name
                 )
             }
+            .alert(isPresented: $isError, error: firebaseError) {
+                Button("承知"){
+                    isError = false
+                }
+            }
             Spacer()
             Button(action: {
                 Task{
                     do {
                         try await uploadFirebase(datas: personArraay)
                     } catch {
-                        FirebaseError.uploadError
+                        firebaseError = FirebaseError.uploadError
                     }
                 }
             }, label: {

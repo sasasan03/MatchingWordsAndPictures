@@ -7,7 +7,7 @@
 
 import Foundation
 
-enum FirebaseError: Error {
+enum FirebaseError: LocalizedError {
     case uploadError
     case downloadError
     case uidFetchError
