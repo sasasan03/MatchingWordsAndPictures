@@ -3,21 +3,20 @@
 //  MatchingWordsAndPictures
 //
 //  Created by sako0602 on 2023/11/02.
-//
 
 import SwiftUI
 
-enum ErrorHandling: LocalizedError {
+enum TextError: LocalizedError {
     case parseError
     case emptyError
-    case unknownError
-    var typeString: String {
+    case unknown
+    var errorDescription: String? {
         switch self {
         case .parseError:
-            return "数字じゃないです"
+            return "数字を入力してください"
         case .emptyError:
-            return "空です"
-        case .unknownError:
+            return "入力されていません"
+        case .unknown:
             return "原因がわかりません"
         }
     }
@@ -26,9 +25,9 @@ enum ErrorHandling: LocalizedError {
 struct ErrorTest: View {
     
     @State var numText = ""
-    @State var errorType: ErrorHandling? = nil
+    @State var errorType: TextError? = nil
     @State var num: Int? = nil
-    @State var isError = false
+    @State var showError = false
     
     var body: some View {
         ZStack{
@@ -39,10 +38,13 @@ struct ErrorTest: View {
                     .padding()
                 Button("解析"){
                     do {
-                        num =  try serchText(stringNum: numText)
-                    } catch  {
-                        isError = true
-                        
+                        num =  try parseNumberFromString(numText: numText)
+                    } catch let error as TextError {
+                        showError = true
+                        errorType = error
+                    } catch {
+                        showError = true
+                        errorType = .unknown
                     }
                 }
                 .foregroundColor(.white)
@@ -57,26 +59,22 @@ struct ErrorTest: View {
                 .foregroundColor(.white)
                 .padding()
             }
-            .alert(isPresented: $isError, error: errorType) { _ in
+            .alert(isPresented: $showError, error: errorType) {
                 Button("承知"){
-                    isError = false
+                    //...処理を記述
                 }
-            } message: { error in
-
             }
         }
         
     }
     
-    func serchText(stringNum: String) throws -> Int {
-        guard stringNum.isEmpty == false else {
-            print("🟥")
-            throw ErrorHandling.emptyError
+    func parseNumberFromString(numText: String) throws -> Int {
+        guard !numText.isEmpty else {
+            throw TextError.emptyError
         }
         let numParse: (String) -> Int? = { str in Int(str) }
-        guard let num = numParse(stringNum) else {
-            print("🟦")
-            throw ErrorHandling.parseError
+        guard let num = numParse(numText) else {
+            throw TextError.parseError
         }
         return num
     }

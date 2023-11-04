@@ -172,6 +172,21 @@
 			path = Login;
 			sourceTree = "<group>";
 		};
+		69BAAFFE2AF4B8D100C5BEB5 /* New Group */ = {
+			isa = PBXGroup;
+			children = (
+				69BAAFFF2AF4B8D600C5BEB5 /* New Group */,
+			);
+			path = "New Group";
+			sourceTree = "<group>";
+		};
+		69BAAFFF2AF4B8D600C5BEB5 /* New Group */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = "New Group";
+			sourceTree = "<group>";
+		};
 		69BD0C342A610A0600DD7041 = {
 			isa = PBXGroup;
 			children = (
@@ -203,6 +218,7 @@
 				69FF2A942AE282C600498576 /* storage */,
 				69FF2A862AD56F1C00498576 /* UploadSampleView.swift */,
 				69BAAFFC2AF3BACE00C5BEB5 /* ErrorTest.swift */,
+				69BAAFFE2AF4B8D100C5BEB5 /* New Group */,
 				69FF2A952AE2948300498576 /* DownloadSmapleView.swift */,
 				690B758D2ABE9E7A006E6882 /* View */,
 				69D545FB2AA89B4200D2A6E9 /* Entity */,
