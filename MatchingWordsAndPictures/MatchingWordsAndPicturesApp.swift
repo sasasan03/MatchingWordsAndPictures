@@ -28,9 +28,7 @@ struct MatchingWordsAndPicturesApp: App {
     
     var body: some Scene {
         WindowGroup {
-//        DownloadSmapleView()//⭐️StorageとCloudFirestoreを使用
-//        UploadSampleView()//⭐️StorageとCloudFirestoreを使用
-            ErrorTest()
+            AuthView()
         }
     }
 }

@@ -20,15 +20,15 @@ enum AuthState {
 //MARK: - エラー
 
 enum LoginValidationError: LocalizedError {
-    case textError
+    case emailError
     case passwordError
-    case unknownError
+    case unknown
     
     var errorDescription: String?{
         switch self {
-        case .textError: return "テキストエラー"
-        case .passwordError: return "パスワードエラー"
-        case .unknownError: return "原因不明"
+        case .emailError: return "emailが間違えています"
+        case .passwordError: return "パスワードが間違っています"
+        case .unknown: return "原因不明"
         }
     }
 }
@@ -38,6 +38,7 @@ private enum FocusableField: Hashable{
     case password
 }
 
+//MARK: - View
 
 struct LoginView: View {
     
@@ -46,15 +47,15 @@ struct LoginView: View {
         return passwordRegex.evaluate(with: password)
     }
     
-    @FocusState private var focus: FocusableField?
-    
     @AppStorage("uid") var userID = ""
-    
     @Binding var currentShowingView: AuthState
     @State var email = ""
     @State var password = ""
+    @State var errorMessage = ""
+    @State private var showError = false
+    @State private var loginError: LoginValidationError?
     
-    @State var flag = false
+    let auth = Auth.auth()
     
     var body: some View {
         NavigationStack{
@@ -83,8 +84,8 @@ struct LoginView: View {
                     HStack{
                         Image(systemName: "lock")
                         TextField("password", text:  $password)
-                        Image(systemName: password.count != 0 ? "checkmark" : "xmark")
-                            .foregroundColor(password.count != 0 ? .green : .red)
+                        Image(systemName: isValidPassword(password) ? "checkmark" : "xmark")
+                            .foregroundColor(isValidPassword(password) ? .green : .red)
                        
                     }
                     .padding()
@@ -94,22 +95,26 @@ struct LoginView: View {
                             .foregroundColor(.black)
                     )
                     Button("ログイン"){
-                        //TODO: 認証する
-                        Auth.auth().signIn(withEmail: email, password: password){ authResult, error in
-                            if let error = error {
-                                print("🍟",error)
-                                return
-                            }
-                            if let authResult = authResult {
-                                print("🍔uid：", authResult.user.uid)
-                                withAnimation{
-                                    userID = authResult.user.uid
-                                    currentShowingView = .loginComplete
-                                    
+                        //TODO: Task{}がよくわからん。エラーが🟦しかでない。間違ったemailアドレスでエラーを吐かせたい
+                        Task<Void, Error>{
+                            do {
+                               try await auth.signIn(withEmail: email, password: password)
+                            } catch let error as NSError {
+                                if let errorCode = AuthErrorCode.Code(rawValue: error.code){
+                                    switch errorCode {
+                                    case .invalidEmail:
+                                        print("🟥")
+                                        loginError = LoginValidationError.emailError
+                                    case .wrongPassword:
+                                        print("🟦")
+                                        loginError = LoginValidationError.passwordError
+                                    default:
+                                        print("🟡")
+                                        loginError = LoginValidationError.unknown
+                                    }
                                 }
                             }
                         }
-                        //TODO: サクセスビューへの遷移
                     }
                     .padding()
                     Spacer()
@@ -129,9 +134,15 @@ struct LoginView: View {
                 }
                 .padding()
             }
+            .alert(isPresented: $showError, error: loginError) {
+                Button("了解"){
+                    
+                }
+            }
         }
        
     }
+
 }
 
 struct LoginView_Previews: PreviewProvider {
