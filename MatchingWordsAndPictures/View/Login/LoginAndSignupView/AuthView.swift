@@ -20,9 +20,8 @@ struct AuthView: View {
                 SignUpView(currentShowingView: $currentShowingView)
                     .transition(.move(edge: .bottom))
             } else {
-//                LoginSuccessView()
-                ImageTextRegisterView()
-                    .transition(.move(edge: .leading))
+                UploadSampleView()
+                    .transition(.move(edge: .trailing))
             }
         }
     }

@@ -10,41 +10,11 @@ import Combine
 import FirebaseAnalytics
 import FirebaseAuth
 
-//MARK: 認証画面の管理
-enum AuthState {
-    case login
-    case signUp
-    case loginComplete
-}
-
-//MARK: - エラー
-
-enum LoginValidationError: LocalizedError {
-    case emailError
-    case passwordError
-    case unknown
-    
-    var errorDescription: String?{
-        switch self {
-        case .emailError: return "emailが間違えています"
-        case .passwordError: return "パスワードが間違っています"
-        case .unknown: return "原因不明"
-        }
-    }
-}
-
-private enum FocusableField: Hashable{
-    case email
-    case password
-}
-
-//MARK: - View
-
 struct LoginView: View {
     
     private func isValidPassword(_ password: String) -> Bool {
-        let passwordRegex = NSPredicate(format: "SELF MATCHES %@", "^(?=.*[a-z])(?=.*[$@$#!%*?&])(?=.*[A-Z]).{6,}$")
-        return passwordRegex.evaluate(with: password)
+        let passwordRegex = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d).{6,}$"
+        return NSPredicate(format: "SELF MATCHES %@", passwordRegex).evaluate(with: password)
     }
     
     @AppStorage("uid") var userID = ""
@@ -72,8 +42,8 @@ struct LoginView: View {
                         
                         Spacer()
                         
-                        Image(systemName: email.count != 0 ? "checkmark" : "xmark")
-                            .foregroundColor(email.count != 0 ?.green : .red)
+                        Image(systemName: email.isValidEmail() ? "checkmark" : "xmark")
+                            .foregroundColor(email.isValidEmail() ?.green : .red)
                     }
                     .padding()
                     .overlay(
@@ -95,21 +65,22 @@ struct LoginView: View {
                             .foregroundColor(.black)
                     )
                     Button("ログイン"){
-                        //TODO: Task{}がよくわからん。エラーが🟦しかでない。間違ったemailアドレスでエラーを吐かせたい
                         Task<Void, Error>{
                             do {
                                try await auth.signIn(withEmail: email, password: password)
+                                withAnimation{
+                                    currentShowingView = .loginComplete
+                                }
                             } catch let error as NSError {
                                 if let errorCode = AuthErrorCode.Code(rawValue: error.code){
+                                    showError = true
                                     switch errorCode {
                                     case .invalidEmail:
-                                        print("🟥")
                                         loginError = LoginValidationError.emailError
                                     case .wrongPassword:
-                                        print("🟦")
+                                        //TODO: パスワードミスをキャッチできない
                                         loginError = LoginValidationError.passwordError
                                     default:
-                                        print("🟡")
                                         loginError = LoginValidationError.unknown
                                     }
                                 }
@@ -124,7 +95,6 @@ struct LoginView: View {
                     HStack{
                         Text("まだ登録をしていない人は")
                         Button("こっち"){
-                            //TODO: サインアップビューへの遷移
                             withAnimation{
                                 currentShowingView = .signUp
                             }
@@ -136,7 +106,7 @@ struct LoginView: View {
             }
             .alert(isPresented: $showError, error: loginError) {
                 Button("了解"){
-                    
+                    showError = false
                 }
             }
         }
