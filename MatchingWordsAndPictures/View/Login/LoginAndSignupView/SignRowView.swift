@@ -10,10 +10,14 @@ import FirebaseAuth
 
 struct SignRowView: View {
     
-    @Binding var signInError: LoginValidationError
+    @Binding var signInError: AuthError
     @Binding var isShowingAlert: Bool
     @State var mail = ""
     @State var password = ""
+    private func isValidPassword(_ password: String) -> Bool {
+        let passwordRegex = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d).{6,}$"
+        return NSPredicate(format: "SELF MATCHES %@", passwordRegex).evaluate(with: password)
+    }
     
     var body: some View {
         VStack{
@@ -24,8 +28,8 @@ struct SignRowView: View {
                 
                 Spacer()
                 
-                Image(systemName: mail.count != 0 ? "checkmark" : "xmark")
-                    .foregroundColor(mail.count != 0 ?.green : .red)
+                Image(systemName: mail.isValidEmail() ? "checkmark" : "xmark")
+                    .foregroundColor(mail.isValidEmail() ?.green : .red)
             }
             .padding()
             .overlay(
@@ -41,8 +45,8 @@ struct SignRowView: View {
                 
                 Spacer()
                 
-                Image(systemName: password.count != 0 ? "checkmark" : "xmark")
-                    .foregroundColor(password.count != 0 ?.green : .red)
+                Image(systemName: isValidPassword(password) ? "checkmark" : "xmark")
+                    .foregroundColor( isValidPassword(password) ?.green : .red)
             }
             .padding()
             .overlay(
@@ -59,7 +63,7 @@ struct SignRowView: View {
 struct SignRowView_Previews: PreviewProvider {
     static var previews: some View {
         SignRowView(
-            signInError: .constant(LoginValidationError.passwordError),
+            signInError: .constant(AuthError.other),
             isShowingAlert: .constant(false)
         )
     }

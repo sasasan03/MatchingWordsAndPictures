@@ -12,6 +12,35 @@ import FirebaseAuth
 
 struct LoginView: View {
     
+    private func setErrorMessage(_ error: Error?) -> String? {
+        guard let error = error as NSError?,
+              let authErrorCode = AuthErrorCode.Code(rawValue: error._code) else {
+            return "原因不明"
+        }
+        switch authErrorCode {
+        case .networkError:
+            return AuthError.networkError.title
+            // パスワードが条件より脆弱であることを示します。
+        case .weakPassword:
+            return AuthError.weakPassword.title
+            // ユーザーが間違ったパスワードでログインしようとしたことを示します。
+        case .wrongPassword:
+            return AuthError.wrongPassword.title
+            // ユーザーのアカウントが無効になっていることを示します。
+        case .userNotFound:
+            return AuthError.userNotFound.title
+            // メールアドレスの形式が正しくないことを示します。
+        case .invalidEmail:
+            return AuthError.invalidEmail.title
+            // 既に登録されているメールアドレス
+        case .emailAlreadyInUse:
+            return AuthError.emailAlreadyInUse.title
+            // その他のエラー
+        default:
+            return AuthError.other.title
+        }
+    }
+    
     private func isValidPassword(_ password: String) -> Bool {
         let passwordRegex = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d).{6,}$"
         return NSPredicate(format: "SELF MATCHES %@", passwordRegex).evaluate(with: password)
@@ -21,9 +50,9 @@ struct LoginView: View {
     @Binding var currentShowingView: AuthState
     @State var email = ""
     @State var password = ""
-    @State var errorMessage = ""
+    @State var errorMessage:String?
     @State private var showError = false
-    @State private var loginError: LoginValidationError?
+    @State private var loginError: AuthError?
     
     let auth = Auth.auth()
     
@@ -71,24 +100,23 @@ struct LoginView: View {
                                 withAnimation{
                                     currentShowingView = .loginComplete
                                 }
-                            } catch let error as NSError {
-                                if let errorCode = AuthErrorCode.Code(rawValue: error.code){
-                                    showError = true
-                                    switch errorCode {
-                                    case .invalidEmail:
-                                        loginError = LoginValidationError.emailError
-                                    case .wrongPassword:
-                                        //TODO: パスワードミスをキャッチできない
-                                        loginError = LoginValidationError.passwordError
-                                    default:
-                                        loginError = LoginValidationError.unknown
-                                    }
+                            } catch {
+                                if let error = error as? AuthErrorCode {
+                                    print("##",error)
                                 }
+                                showError = true
+                                //TODO: おそらくサーバー側エラーか、
+                                errorMessage = setErrorMessage(error)
                             }
                         }
                     }
                     .padding()
                     Spacer()
+                    if let errorMessage {
+                        Text(errorMessage)
+                    } else {
+                        Text("エラーなし")
+                    }
                     Spacer()
 
                     //MARK: - SignViewへの移動処理

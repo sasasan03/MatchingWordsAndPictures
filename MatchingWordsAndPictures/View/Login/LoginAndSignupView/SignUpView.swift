@@ -11,40 +11,59 @@ import Firebase
 import FirebaseStorage
 
 
-
-enum LoginError: LocalizedError {
-    case inVaildMail
-    case inValidPass
-    case unKnown
+struct SignUpView: View {
     
-    var errorDescription: String? {
-        switch self {
-        case .inVaildMail: return "メール間違い"
-        case .inValidPass: return "入力したパスワード間違い"
-        case .unKnown: return "わかんね"
+    private func setErrorMessage(_ error: Error?) -> String? {
+        guard let error = error as NSError?,
+              let authErrorCode = AuthErrorCode.Code(rawValue: error._code) else {
+            return "原因不明"
+        }
+        switch authErrorCode {
+        case .networkError:
+            return AuthError.networkError.title
+            // パスワードが条件より脆弱であることを示します。
+        case .weakPassword:
+            return AuthError.weakPassword.title
+            // ユーザーが間違ったパスワードでログインしようとしたことを示します。
+        case .wrongPassword:
+            return AuthError.wrongPassword.title
+            // ユーザーのアカウントが無効になっていることを示します。
+        case .userNotFound:
+            return AuthError.userNotFound.title
+            // メールアドレスの形式が正しくないことを示します。
+        case .invalidEmail:
+            return AuthError.invalidEmail.title
+            // 既に登録されているメールアドレス
+        case .emailAlreadyInUse:
+            return AuthError.emailAlreadyInUse.title
+            // その他のエラー
+        default:
+            return AuthError.other.title
         }
     }
-    
-}
-
-struct SignUpView: View {
     
     @Binding var currentShowingView: AuthState
     @AppStorage("uid") var userID = ""
     @State private var mail = ""
     @State private var password = ""
-    @State private var loginStatusMessage = ""
+    @State private var erroMessage = ""
+    let auth = Auth.auth()
+    
+    private func isValidPassword(_ password: String) -> Bool {
+        let passwordRegex = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d).{6,}$"
+        return NSPredicate(format: "SELF MATCHES %@", passwordRegex).evaluate(with: password)
+    }
     
     //MARK: - エラー処理で使用
-    @State var loginError: LoginError? = nil
-    @State var showAlert = false
+    @State var signInError:AuthError?
+    @State var showError = false
     
     var body: some View {
         ZStack {
             Color.blue.ignoresSafeArea(.all)
             
             VStack{
-                Text("とうろく")
+                Text("make Account")
                     .font(.largeTitle)
                     .bold()
                     .foregroundColor(.white)
@@ -57,8 +76,8 @@ struct SignUpView: View {
                     
                     Spacer()
                     
-                    Image(systemName: mail.count != 0 ? "checkmark" : "xmark")
-                        .foregroundColor(mail.count != 0 ?.green : .red)
+                    Image(systemName: mail.isValidEmail() ? "checkmark" : "xmark")
+                        .foregroundColor(mail.isValidEmail() ?.green : .red)
                 }
                 .padding()
                 .overlay(
@@ -69,13 +88,13 @@ struct SignUpView: View {
                 .background(RoundedRectangle(cornerRadius: 10).fill(Color.white))
                 //MARK: - password
                 HStack{
-                    Image(systemName: "mail")
-                    TextField("mail", text: $password)
+                    Image(systemName: "lock")
+                    TextField("password", text: $password)
                     
                     Spacer()
                     
-                    Image(systemName: password.count != 0 ? "checkmark" : "xmark")
-                        .foregroundColor(password.count != 0 ?.green : .red)
+                    Image(systemName: isValidPassword(password) ? "checkmark" : "xmark")
+                        .foregroundColor(isValidPassword(password) ?.green : .red)
                 }
                 .padding()
                 .overlay(
@@ -86,49 +105,47 @@ struct SignUpView: View {
                 .background(RoundedRectangle(cornerRadius: 10).fill(Color.white))
                 
                 Spacer()
-                Text(loginStatusMessage)
+                
+                Text(erroMessage)
                     .foregroundColor(.black)
                 Spacer()
                 
                 //MARK: - 登録ボタン
                 Button("登録する"){
-                    //TODO: アドレスとパスワードの登録。認証
+                    //TODO: アドレスとパスワードの登録。認証<Void,Error>
+                    Task<Void,Error> {
+                        do {
+                            let authResult = try await auth.createUser(withEmail: mail, password: password)
+                            let userID = authResult.user.uid
+                            self.userID = userID
+                            erroMessage = "登録が完了しました。"
+                        } catch let error as NSError {
+                            showError = true
+                            guard let error = setErrorMessage(error) else {
+                                return print("原因不明のエラー")
+                            }
+                            erroMessage = error
+                            print(error)
+                        }
+                    }
                     
-                    Auth.auth().createUser(withEmail: mail, password: password){ authResult , error in
-                        guard mail.count == 0 || password.count == 0 else {
-                            return
-                        }
-
-                        if let error = error as? LoginError {
-                           print("🍔")
-                        loginError = error//🟥()をつけると解消。評価の優先順位をつけてくれるのか？
-                            showAlert = true
-                            return
-                        }
-                        print("🍟")
-                        if let authResult = authResult {
-                            userID = authResult.user.uid
-                        }
-                    }
                     //TODO: サクセスビューへの遷移
-                    withAnimation{
-                        currentShowingView = .loginComplete
-                    }
+
                 }
                 .foregroundColor(.white)
                 .padding()
 
             }
-            .alert(isPresented: $showAlert, error: loginError, actions: { error in
-                
-                
-            }, message: { error in
-                Text(error.errorDescription ?? "unknown")
-                Button("承知！！"){
-                    showAlert = false
+            //エラーを表示するアラート
+            .alert(isPresented: $showError, error: signInError) {
+                Button("承知"){
+                    if signInError == nil {
+                        withAnimation{
+                            currentShowingView = .login
+                        }
+                    }
                 }
-            })
-            
+            }
             .padding()
         }
     }
@@ -138,6 +155,5 @@ struct SignUpView: View {
 struct SignUpView_Previews: PreviewProvider {
     static var previews: some View {
         SignUpView(currentShowingView: .constant(AuthState.signUp))
-//            .environmentObject(AuthenticationViewModel())
     }
 }
