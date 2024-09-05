@@ -25,26 +25,30 @@ public enum AuthError: LocalizedError {
     case invalidEmail
     // 既に登録されているメールアドレス
     case emailAlreadyInUse
+    
+    case internalError
     // その他のエラー
     case other
-
+    
     /// エラーによって表示する文字を定義
     var title: String? {
         switch self {
-            case .networkError:
-                return "通信エラーです。"
-            case .weakPassword:
-                return "パスワードが脆弱です。"
-            case .wrongPassword:
-                return "メールアドレス、もしくはパスワードが違います。"
-            case .userNotFound:
-                return "アカウントがありません。"
-            case .invalidEmail:
-                return "正しくないメールアドレスの形式です。"
-            case .emailAlreadyInUse:
-                return "既に登録されているメールアドレスです。"
-            case .other:
-                return "原因不明のエラー。サーバーサイドかな？"
+        case .networkError:
+            return "通信エラーです。"
+        case .weakPassword:
+            return "パスワードが脆弱です。"
+        case .wrongPassword:
+            return "メールアドレス、もしくはパスワードが違います。"
+        case .userNotFound:
+            return "アカウントがありません。"
+        case .invalidEmail:
+            return "正しくないメールアドレスの形式です。"
+        case .emailAlreadyInUse:
+            return "既に登録されているメールアドレスです。"
+        case .internalError:
+            return "インナーナルエラー"
+        case .other:
+            return "原因不明のエラー。サーバーサイドかな？"
         }
     }
 }

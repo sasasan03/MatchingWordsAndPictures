@@ -17,6 +17,7 @@ struct LoginView: View {
               let authErrorCode = AuthErrorCode.Code(rawValue: error._code) else {
             return "原因不明"
         }
+        print("エラー",error.localizedDescription)
         switch authErrorCode {
         case .networkError:
             return AuthError.networkError.title
@@ -35,6 +36,9 @@ struct LoginView: View {
             // 既に登録されているメールアドレス
         case .emailAlreadyInUse:
             return AuthError.emailAlreadyInUse.title
+            
+        case .internalError:
+            return AuthError.internalError.title
             // その他のエラー
         default:
             return AuthError.other.title
@@ -105,7 +109,6 @@ struct LoginView: View {
                                     print("##",error)
                                 }
                                 showError = true
-                                //TODO: おそらくサーバー側エラーか、
                                 errorMessage = setErrorMessage(error)
                             }
                         }
@@ -133,6 +136,7 @@ struct LoginView: View {
                 .padding()
             }
             .alert(isPresented: $showError, error: loginError) {
+                //メアドミス。メールミス。パスワードの重複ミス。
                 Button("了解"){
                     showError = false
                 }

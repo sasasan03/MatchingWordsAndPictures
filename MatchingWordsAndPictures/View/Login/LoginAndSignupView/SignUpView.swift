@@ -18,6 +18,7 @@ struct SignUpView: View {
               let authErrorCode = AuthErrorCode.Code(rawValue: error._code) else {
             return "原因不明"
         }
+        print("$$$",authErrorCode)
         switch authErrorCode {
         case .networkError:
             return AuthError.networkError.title
